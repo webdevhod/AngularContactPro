@@ -32,7 +32,8 @@ public static class IdentityConfiguration
         return new List<Role>
         {
             new Role {Id = "role_admin", Name = "ROLE_ADMIN"},
-            new Role {Id = "role_user",Name = "ROLE_USER"}
+            new Role {Id = "role_user",Name = "ROLE_USER"},
+            new Role {Id = "role_guest",Name = "ROLE_GUEST"}
         };
     }
 

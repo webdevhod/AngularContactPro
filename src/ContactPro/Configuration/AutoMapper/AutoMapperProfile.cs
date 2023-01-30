@@ -1,18 +1,22 @@
+
 using AutoMapper;
 using System.Linq;
 using ContactPro.Domain.Entities;
 using ContactPro.Dto;
 
 
-namespace ContactPro.Configuration.AutoMapper;
-
-public class AutoMapperProfile : Profile
+namespace ContactPro.Configuration.AutoMapper
 {
-    public AutoMapperProfile()
+
+    public class AutoMapperProfile : Profile
     {
-        CreateMap<User, UserDto>()
-            .ForMember(userDto => userDto.Roles, opt => opt.MapFrom(user => user.UserRoles.Select(iur => iur.Role.Name).ToHashSet()))
-        .ReverseMap()
-            .ForPath(user => user.UserRoles, opt => opt.MapFrom(userDto => userDto.Roles.Select(role => new UserRole { Role = new Role { Name = role }, UserId = userDto.Id }).ToHashSet()));
+        public AutoMapperProfile()
+        {
+            CreateMap<User, UserDto>()
+                .ForMember(userDto => userDto.Roles, opt => opt.MapFrom(user => user.UserRoles.Select(iur => iur.Role.Name).ToHashSet()))
+            .ReverseMap()
+                .ForPath(user => user.UserRoles, opt => opt.MapFrom(userDto => userDto.Roles.Select(role => new UserRole { Role = new Role { Name = role }, UserId = userDto.Id }).ToHashSet()));
+
+        }
     }
 }

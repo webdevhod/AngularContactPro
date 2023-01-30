@@ -1,0 +1,420 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form
+      name="editForm"
+      role="form"
+      novalidate
+      (ngSubmit)="save()"
+      [formGroup]="editForm"
+    >
+      <h2 id="jhi-contact-heading" data-cy="ContactCreateUpdateHeading">
+        Create or edit a Contact
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-label" for="field_id">ID</label>
+          <input
+            type="number"
+            class="form-control"
+            name="id"
+            id="field_id"
+            data-cy="id"
+            formControlName="id"
+            [readonly]="true"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_firstName">First Name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="firstName"
+            id="field_firstName"
+            data-cy="firstName"
+            formControlName="firstName"
+          />
+          <div
+            *ngIf="
+              editForm.get('firstName')!.invalid &&
+              (editForm.get('firstName')!.dirty ||
+                editForm.get('firstName')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('firstName')?.errors?.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_lastName">Last Name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="lastName"
+            id="field_lastName"
+            data-cy="lastName"
+            formControlName="lastName"
+          />
+          <div
+            *ngIf="
+              editForm.get('lastName')!.invalid &&
+              (editForm.get('lastName')!.dirty ||
+                editForm.get('lastName')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('lastName')?.errors?.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_address1">Address 1</label>
+          <input
+            type="text"
+            class="form-control"
+            name="address1"
+            id="field_address1"
+            data-cy="address1"
+            formControlName="address1"
+          />
+          <div
+            *ngIf="
+              editForm.get('address1')!.invalid &&
+              (editForm.get('address1')!.dirty ||
+                editForm.get('address1')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('address1')?.errors?.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_address2">Address 2</label>
+          <input
+            type="text"
+            class="form-control"
+            name="address2"
+            id="field_address2"
+            data-cy="address2"
+            formControlName="address2"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_city">City</label>
+          <input
+            type="text"
+            class="form-control"
+            name="city"
+            id="field_city"
+            data-cy="city"
+            formControlName="city"
+          />
+          <div
+            *ngIf="
+              editForm.get('city')!.invalid &&
+              (editForm.get('city')!.dirty || editForm.get('city')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('city')?.errors?.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_state">State</label>
+          <select
+            class="form-control"
+            name="state"
+            formControlName="state"
+            id="field_state"
+            data-cy="state"
+          >
+            <option [ngValue]="null"></option>
+            <option *ngFor="let states of statesValues" [value]="states">
+              states
+            </option>
+          </select>
+          <div
+            *ngIf="
+              editForm.get('state')!.invalid &&
+              (editForm.get('state')!.dirty || editForm.get('state')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('state')?.errors?.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_zipCode">Zip Code</label>
+          <input
+            type="text"
+            class="form-control"
+            name="zipCode"
+            id="field_zipCode"
+            data-cy="zipCode"
+            formControlName="zipCode"
+          />
+          <div
+            *ngIf="
+              editForm.get('zipCode')!.invalid &&
+              (editForm.get('zipCode')!.dirty ||
+                editForm.get('zipCode')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('zipCode')?.errors?.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_email">Email</label>
+          <input
+            type="text"
+            class="form-control"
+            name="email"
+            id="field_email"
+            data-cy="email"
+            formControlName="email"
+          />
+          <div
+            *ngIf="
+              editForm.get('email')!.invalid &&
+              (editForm.get('email')!.dirty || editForm.get('email')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('email')?.errors?.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_phoneNumber">Phone Number</label>
+          <input
+            type="text"
+            class="form-control"
+            name="phoneNumber"
+            id="field_phoneNumber"
+            data-cy="phoneNumber"
+            formControlName="phoneNumber"
+          />
+          <div
+            *ngIf="
+              editForm.get('phoneNumber')!.invalid &&
+              (editForm.get('phoneNumber')!.dirty ||
+                editForm.get('phoneNumber')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('phoneNumber')?.errors?.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_birthDate">Birth Date</label>
+          <div class="input-group">
+            <input
+              id="field_birthDate"
+              data-cy="birthDate"
+              type="text"
+              class="form-control"
+              name="birthDate"
+              ngbDatepicker
+              #birthDateDp="ngbDatepicker"
+              formControlName="birthDate"
+            />
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="birthDateDp.toggle()"
+            >
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_created">Created</label>
+          <div class="input-group">
+            <input
+              id="field_created"
+              data-cy="created"
+              type="text"
+              class="form-control"
+              name="created"
+              ngbDatepicker
+              #createdDp="ngbDatepicker"
+              formControlName="created"
+            />
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="createdDp.toggle()"
+            >
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_imageData">Image Data</label>
+          <div>
+            <img
+              [src]="
+                'data:' +
+                editForm.get('imageDataContentType')!.value +
+                ';base64,' +
+                editForm.get('imageData')!.value
+              "
+              style="max-height: 100px"
+              *ngIf="editForm.get('imageData')!.value"
+              alt="contact image"
+            />
+            <div
+              *ngIf="editForm.get('imageData')!.value"
+              class="form-text text-danger clearfix"
+            >
+              <span class="pull-start"
+                >{{ editForm.get("imageDataContentType")!.value }},
+                {{ byteSize(editForm.get("imageData")!.value) }}</span
+              >
+              <button
+                type="button"
+                (click)="
+                  clearInputImage(
+                    'imageData',
+                    'imageDataContentType',
+                    'file_imageData'
+                  )
+                "
+                class="btn btn-secondary btn-xs pull-end"
+              >
+                <fa-icon icon="times"></fa-icon>
+              </button>
+            </div>
+            <input
+              type="file"
+              id="file_imageData"
+              data-cy="imageData"
+              (change)="setFileData($event, 'imageData', true)"
+              accept="image/*"
+            />
+          </div>
+          <input
+            type="hidden"
+            class="form-control"
+            name="imageData"
+            id="field_imageData"
+            data-cy="imageData"
+            formControlName="imageData"
+          />
+          <input
+            type="hidden"
+            class="form-control"
+            name="imageDataContentType"
+            id="field_imageDataContentType"
+            formControlName="imageDataContentType"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_imageType">Image Type</label>
+          <input
+            type="text"
+            class="form-control"
+            name="imageType"
+            id="field_imageType"
+            data-cy="imageType"
+            formControlName="imageType"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_user">User</label>
+          <select
+            class="form-control"
+            id="field_user"
+            data-cy="user"
+            name="user"
+            formControlName="user"
+          >
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                userOption.id === editForm.get('user')!.value?.id
+                  ? editForm.get('user')!.value
+                  : userOption
+              "
+              *ngFor="
+                let userOption of usersSharedCollection;
+                trackBy: trackUserById
+              "
+            >
+              {{ userOption.login }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button
+          type="button"
+          id="cancel-save"
+          data-cy="entityCreateCancelButton"
+          class="btn btn-secondary"
+          (click)="previousState()"
+        >
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

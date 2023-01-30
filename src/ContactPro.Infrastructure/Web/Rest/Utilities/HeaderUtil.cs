@@ -14,19 +14,25 @@ public static class HeaderUtil
         return headers;
     }
 
-    public static IHeaderDictionary CreateEntityCreationAlert(string entityName, string param)
+    public static IHeaderDictionary CreateEntityCreationAlert(string name, string entityName, string param)
     {
-        return CreateAlert($"{APPLICATION_NAME}.{entityName}.created", param);
+        return CreateAlert($"{name} {entityName} created!", param);
     }
 
-    public static IHeaderDictionary CreateEntityUpdateAlert(string entityName, string param)
+    public static IHeaderDictionary CreateEntityUpdateAlert(string name, string entityName, string param)
     {
-        return CreateAlert($"{APPLICATION_NAME}.{entityName}.updated", param);
+        return CreateAlert($"{name} {entityName} updated!", param);
     }
 
-    public static IHeaderDictionary CreateEntityDeletionAlert(string entityName, string param)
+    public static IHeaderDictionary CreateEntityEmailAlert(string name, string entityName, string param)
     {
-        return CreateAlert($"{APPLICATION_NAME}.{entityName}.deleted", param);
+        // loop through contact list
+        return CreateAlert($"{name} {entityName} emailed!", param);
+    }
+
+    public static IHeaderDictionary CreateEntityDeletionAlert(string name, string entityName, string param)
+    {
+        return CreateAlert($"{name} {entityName} deleted!", param);
     }
 
     public static IHeaderDictionary CreateFailureAlert(string entityName, string errorKey, string defaultMessage)

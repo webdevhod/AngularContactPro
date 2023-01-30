@@ -99,8 +99,6 @@ bld/
 
 **/.toolstarget
 
-.jhipster
-
 sonar-project.properties
 
 Thumbs.db

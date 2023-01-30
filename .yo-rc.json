@@ -6,7 +6,7 @@
     "blueprints": [
       {
         "name": "generator-jhipster-dotnetcore",
-        "version": "3.9.0"
+        "version": "3.9.1"
       }
     ],
     "buildTool": "maven",
@@ -24,16 +24,18 @@
     "enableGradleEnterprise": false,
     "enableHibernateCache": true,
     "enableTranslation": false,
+    "entities": ["Category", "Contact"],
     "entitySuffix": "",
     "jhiPrefix": "jhi",
     "jhipsterVersion": "7.8.1",
     "languages": ["en", "fr"],
+    "lastLiquibaseTimestamp": 1675040884000,
     "namespace": "ContactPro",
     "nativeLanguage": "en",
     "otherModules": [
       {
         "name": "generator-jhipster-dotnetcore",
-        "version": "3.9.0"
+        "version": "3.9.1"
       }
     ],
     "packageName": "com.mycompany.myapp",
