@@ -1,4 +1,35 @@
-<nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-primary">
+<nav class="navbar navbar-expand-md navbar-light fixed-top border-bottom border-light navShadow">
+  <div class="container-fluid">
+      <a class="navbar-brand" href="#"><img src="content/img/ContactPro.png" height=45></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/contactlist.html">Contacts</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/category.html">Categories</a>
+              </li>
+          </ul>
+          <ul class="navbar-nav">
+              <li class="nav-item me-2 mb-2">
+                  <a type="button" class="btn btn-primary rounded-pill btnlinks" href="#">Register</a>
+              </li>
+              <li class="nav-item me-2">
+                  <a type="button" class="btn btn-outline-primary rounded-pill btnlinks" href="#">Login</a>
+              </li>
+          </ul>
+      </div>
+  </div>
+</nav>
+
+<!-- <nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-primary">
   <div class="container-fluid">
     <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
       <span class="logo-img"></span>
@@ -36,7 +67,7 @@
             </span>
           </a>
         </li>
-        <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
+        // jhipster-needle-add-element-to-menu - JHipster will add new menu items here
         <li
           *ngSwitchCase="true"
           ngbDropdown
@@ -86,7 +117,7 @@
                 <span>Contact</span>
               </a>
             </li>
-            <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
+            // jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here
           </ul>
         </li>
         <li
@@ -136,7 +167,7 @@
                 <span>API</span>
               </a>
             </li>
-            <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
+            // jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here
             <li *ngIf="!inProduction">
               <a
                 class="dropdown-item"
@@ -244,4 +275,4 @@
       </ul>
     </div>
   </div>
-</nav>
+</nav> -->
