@@ -63,7 +63,7 @@
             }}</a>
           </td>
           <td>{{ category.name }}</td>
-          <td>{{ category.created | formatMediumDate }}</td>
+          <td>{{ category.created }}</td>
           <td>
             <span *ngFor="let contact of category.contacts; let last = last">
               <a
