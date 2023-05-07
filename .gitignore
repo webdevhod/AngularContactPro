@@ -68,6 +68,7 @@ npm-debug.log.*
 !**/wwwroot/favicon.ico
 !**/wwwroot/robot.txt
 !**/wwwroot/manifest.webapp
+*.angular
 
 # User-specific files
 *.suo
