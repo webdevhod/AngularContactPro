@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-light fixed-top border-bottom border-light navShadow"
   [ngSwitch]="account !== null">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#"><img src="content/img/ContactPro.png" height=45></a>
+    <a class="navbar-brand" routerLink="/"><img src="content/img/ContactPro.png" height=45></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
       aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -19,10 +19,6 @@
         </li>
       </ul>
       <ul class="navbar-nav">
-
-
-
-
         <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" display="dynamic"
           routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu"
@@ -54,11 +50,6 @@
             </li>
           </ul>
         </li>
-
-
-
-
-
         <li ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu"
@@ -107,13 +98,6 @@
             </li>
           </ul>
         </li>
-
-
-
-
-
-
-
         <li class="nav-item me-2 mb-2">
           <a type="button" class="btn btn-primary rounded-pill btnlinks" routerLink="#">Register</a>
         </li>
