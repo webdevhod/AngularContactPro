@@ -46,6 +46,10 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  isAuthenticated(): boolean {
+    return this.accountService.isAuthenticated();
+  }
+
   collapseNavbar(): void {
     this.isNavbarCollapsed = true;
   }
