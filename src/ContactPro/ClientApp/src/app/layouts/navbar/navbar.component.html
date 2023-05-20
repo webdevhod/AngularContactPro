@@ -20,39 +20,39 @@
           </li>
         </ng-container>
       </ul>
-      <ul class="navbar-nav">
-        <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" display="dynamic"
-          routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu"
-            data-cy="adminMenu">
-            <span>
-              <fa-icon icon="users-cog"></fa-icon>
-              <span>Administration</span>
-            </span>
-          </a>
-          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
-            <li>
-              <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active"
-                (click)="collapseNavbar()">
-                <fa-icon icon="users" [fixedWidth]="true"></fa-icon>
-                <span>User management</span>
-              </a>
-            </li>
-            <li *ngIf="openAPIEnabled">
-              <a class="dropdown-item" routerLink="admin/docs" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="book" [fixedWidth]="true"></fa-icon>
-                <span>API</span>
-              </a>
-            </li>
-            <li *ngIf="!inProduction">
-              <a class="dropdown-item" href="./h2-console/" target="_tab" (click)="collapseNavbar()">
-                <fa-icon icon="database" [fixedWidth]="true"></fa-icon>
-                <span>Database</span>
-              </a>
-            </li>
-          </ul>
-        </li>
+      <ul class="navbar-nav d-flex align-items-center">
         <ng-container *ngIf="isAuthenticated()">
+          <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" display="dynamic"
+            routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu"
+              data-cy="adminMenu">
+              <span>
+                <fa-icon icon="users-cog"></fa-icon>
+                <span>Administration</span>
+              </span>
+            </a>
+            <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
+              <li>
+                <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active"
+                  (click)="collapseNavbar()">
+                  <fa-icon icon="users" [fixedWidth]="true"></fa-icon>
+                  <span>User management</span>
+                </a>
+              </li>
+              <li *ngIf="openAPIEnabled">
+                <a class="dropdown-item" routerLink="admin/docs" routerLinkActive="active" (click)="collapseNavbar()">
+                  <fa-icon icon="book" [fixedWidth]="true"></fa-icon>
+                  <span>API</span>
+                </a>
+              </li>
+              <li *ngIf="!inProduction">
+                <a class="dropdown-item" href="./h2-console/" target="_tab" (click)="collapseNavbar()">
+                  <fa-icon icon="database" [fixedWidth]="true"></fa-icon>
+                  <span>Database</span>
+                </a>
+              </li>
+            </ul>
+          </li>
           <li ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }">
             <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu"
@@ -102,7 +102,7 @@
             </ul>
           </li>
         </ng-container>
-        <li class="nav-item me-2 mb-2">
+        <li class="nav-item me-2">
           <a type="button" class="btn btn-primary rounded-pill btnlinks" routerLink="#">Register</a>
         </li>
         <li class="nav-item me-2">

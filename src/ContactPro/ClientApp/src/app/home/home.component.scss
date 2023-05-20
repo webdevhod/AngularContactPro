@@ -6,20 +6,67 @@ Main page styles
   display: inline-block;
   width: 347px;
   height: 497px;
-  background: url("../../content/images/jhipster_family_member_1.svg") no-repeat
-    center top;
+  background: url("../../content/images/jhipster_family_member_1.svg") no-repeat center top;
   background-size: contain;
+}
+
+.demo-button {
+  font-size: 1.5rem;
+  width: 90%;
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  .demo-button {
+    padding: 10px 0;
+  }
+
+  .icon {
+    font-size: 3.5rem;
+  }
+
+  .contact-mt {
+    margin-top: 3rem;
+  }
+
+  .mainbox {
+    width: 600px;
+  }
+
+  .err {
+    left: 20%;
+  }
+
+  .far {
+    left: 42%;
+  }
+
+  .err2 {
+    left: 68%;
+  }
+
+  .dropdown-menu-end {
+    &.show {
+      right: 8px;
+    }
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  .demo-button {
+    width: 50%;
+  }
 }
 
 /* wait autoprefixer update to allow simple generation of high pixel density media query */
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (-moz-min-device-pixel-ratio: 2),
-  only screen and (-o-min-device-pixel-ratio: 2/1),
-  only screen and (min-resolution: 192dpi),
-  only screen and (min-resolution: 2dppx) {
+only screen and (-moz-min-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 2/1),
+only screen and (min-resolution: 192dpi),
+only screen and (min-resolution: 2dppx) {
   .hipster {
-    background: url("../../content/images/jhipster_family_member_1.svg")
-      no-repeat center top;
+    background: url("../../content/images/jhipster_family_member_1.svg") no-repeat center top;
     background-size: contain;
   }
 }
