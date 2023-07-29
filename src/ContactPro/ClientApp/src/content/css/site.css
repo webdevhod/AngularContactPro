@@ -3,14 +3,13 @@
     --cf-primaryColorDark: #002a4e;
     --cf-primaryColorLight: #edf5fc;
     --cf-secondaryColor: #fff0d9;
-    --cf-secondaryColorLight: #FFF8EC;
+    --cf-secondaryColorLight: #fff8ec;
     --cf-dark-color: #131313;
     --cf-light-gray: #d9d9d9;
     --cf-light-color: #eeeeee;
 
-    --cf-title-font: 'Fira Sans', sans-serif;
-    --cf-body-font: 'Roboto', sans-serif;
-
+    --cf-title-font: "Fira Sans", sans-serif;
+    --cf-body-font: "Roboto", sans-serif;
 }
 
 html,
@@ -27,7 +26,6 @@ body {
     font-family: var(--cf-body-font);
     font-weight: 400;
     font-size: 1.2rem;
-
 }
 
 /*--Button Overrides --*/
@@ -53,23 +51,20 @@ body {
 .btn-primary:hover {
     filter: brightness(1.2) !important;
     border-color: var(--cf-primaryColorDark);
-
 }
 
 .btn-primary:active,
 .btn-primary:visited,
 .btn-primary:focus {
     filter: brightness(1.2) !important;
-
 }
 
 .btnlinks {
     width: 7rem;
-
 }
 
 nav {
-    background-color: var(--cf-primaryColorLight)
+    background-color: var(--cf-primaryColorLight);
 }
 
 h1,
@@ -83,15 +78,8 @@ h6 {
     text-transform: uppercase;
 }
 
-
 main {
     background-color: var(--cf-primaryColorLight);
-}
-
-.content {
-    flex: 1 0 auto;
-    padding-top: 7.5rem;
-    padding-bottom: 2.5rem;
 }
 
 .heroCard {
@@ -146,7 +134,7 @@ main {
 
 .editIcons {
     font-size: 1.5rem;
-    opacity: .9;
+    opacity: 0.9;
     color: var(--cf-primaryColorDark);
 }
 
@@ -156,7 +144,6 @@ main {
     opacity: 1;
     cursor: pointer;
 }
-
 
 .icon {
     font-size: 3.5rem;
@@ -169,12 +156,12 @@ main {
 
 .copyright {
     color: var(--cf-primaryColorDark);
-    font-size: .9rem;
+    font-size: 0.9rem;
 }
 
 .socialicons {
     color: var(--cf-primaryColorDark);
-    opacity: .9;
+    opacity: 0.9;
     font-size: 2rem;
 }
 
@@ -195,7 +182,6 @@ main {
     content: "";
     display: block;
     padding-bottom: 100%;
-
 }
 
 .square-img {
@@ -204,9 +190,7 @@ main {
     height: 100%;
     object-fit: cover;
     object-position: top;
-
 }
-
 
 /* X-Large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
