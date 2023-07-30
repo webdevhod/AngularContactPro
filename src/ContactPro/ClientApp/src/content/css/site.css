@@ -78,6 +78,10 @@ h6 {
     text-transform: uppercase;
 }
 
+jhi-main {
+    height: 100%;
+}
+
 main {
     background-color: var(--cf-primaryColorLight);
 }

@@ -7,51 +7,52 @@ import { CategoryService } from "../service/category.service";
 import { CategoryDeleteDialogComponent } from "../delete/category-delete-dialog.component";
 
 @Component({
-  selector: "jhi-category",
-  templateUrl: "./category.component.html",
+    selector: "jhi-category",
+    templateUrl: "./category.component.html",
+    styleUrls: ["./category.component.scss"],
 })
 export class CategoryComponent implements OnInit {
-  categories?: ICategory[];
-  isLoading = false;
+    categories?: ICategory[];
+    isLoading = false;
 
-  constructor(
-    protected categoryService: CategoryService,
-    protected modalService: NgbModal
-  ) {}
+    constructor(
+        protected categoryService: CategoryService,
+        protected modalService: NgbModal
+    ) {}
 
-  loadAll(): void {
-    this.isLoading = true;
+    loadAll(): void {
+        this.isLoading = true;
 
-    this.categoryService.query().subscribe({
-      next: (res: HttpResponse<ICategory[]>) => {
-        this.isLoading = false;
-        this.categories = res.body ?? [];
-      },
-      error: () => {
-        this.isLoading = false;
-      },
-    });
-  }
+        this.categoryService.query().subscribe({
+            next: (res: HttpResponse<ICategory[]>) => {
+                this.isLoading = false;
+                this.categories = res.body ?? [];
+            },
+            error: () => {
+                this.isLoading = false;
+            },
+        });
+    }
 
-  ngOnInit(): void {
-    this.loadAll();
-  }
-
-  trackId(_index: number, item: ICategory): number {
-    return item.id!;
-  }
-
-  delete(category: ICategory): void {
-    const modalRef = this.modalService.open(CategoryDeleteDialogComponent, {
-      size: "lg",
-      backdrop: "static",
-    });
-    modalRef.componentInstance.category = category;
-    // unsubscribe not needed because closed completes on modal close
-    modalRef.closed.subscribe((reason) => {
-      if (reason === "deleted") {
+    ngOnInit(): void {
         this.loadAll();
-      }
-    });
-  }
+    }
+
+    trackId(_index: number, item: ICategory): number {
+        return item.id!;
+    }
+
+    delete(category: ICategory): void {
+        const modalRef = this.modalService.open(CategoryDeleteDialogComponent, {
+            size: "lg",
+            backdrop: "static",
+        });
+        modalRef.componentInstance.category = category;
+        // unsubscribe not needed because closed completes on modal close
+        modalRef.closed.subscribe((reason) => {
+            if (reason === "deleted") {
+                this.loadAll();
+            }
+        });
+    }
 }

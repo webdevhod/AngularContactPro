@@ -1,150 +1,153 @@
-<div>
-  <h2 id="page-heading" data-cy="ContactHeading">
-    <span>Contacts</span>
+<div class="container">
+    <h2 id="page-heading" data-cy="ContactHeading">
+        <span>Contacts</span>
 
-    <div class="d-flex justify-content-end">
-      <button
-        class="btn btn-info me-2"
-        (click)="loadAll()"
-        [disabled]="isLoading"
-      >
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span>Refresh List</span>
-      </button>
+        <div class="d-flex justify-content-end">
+            <button
+                class="btn btn-info me-2"
+                (click)="loadAll()"
+                [disabled]="isLoading"
+            >
+                <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+                <span>Refresh List</span>
+            </button>
 
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-contact"
-        [routerLink]="['/contact/new']"
-      >
-        <fa-icon icon="plus"></fa-icon>
-        <span> Create a new Contact </span>
-      </button>
+            <button
+                id="jh-create-entity"
+                data-cy="entityCreateButton"
+                class="btn btn-primary jh-create-entity create-contact"
+                [routerLink]="['/contact/new']"
+            >
+                <fa-icon icon="plus"></fa-icon>
+                <span> Create a new Contact </span>
+            </button>
+        </div>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div
+        class="alert alert-warning"
+        id="no-result"
+        *ngIf="contacts?.length === 0"
+    >
+        <span>No contacts found</span>
     </div>
-  </h2>
 
-  <jhi-alert-error></jhi-alert-error>
+    <div
+        class="table-responsive"
+        id="entities"
+        *ngIf="contacts && contacts.length > 0"
+    >
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col"><span>ID</span></th>
+                    <th scope="col"><span>First Name</span></th>
+                    <th scope="col"><span>Last Name</span></th>
+                    <th scope="col"><span>Address 1</span></th>
+                    <th scope="col"><span>Address 2</span></th>
+                    <th scope="col"><span>City</span></th>
+                    <th scope="col"><span>State</span></th>
+                    <th scope="col"><span>Zip Code</span></th>
+                    <th scope="col"><span>Email</span></th>
+                    <th scope="col"><span>Phone Number</span></th>
+                    <th scope="col"><span>Birth Date</span></th>
+                    <th scope="col"><span>Created</span></th>
+                    <th scope="col"><span>Image Data</span></th>
+                    <th scope="col"><span>Image Type</span></th>
+                    <th scope="col"><span>User</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let contact of contacts; trackBy: trackId"
+                    data-cy="entityTable"
+                >
+                    <td>
+                        <a [routerLink]="['/contact', contact.id, 'view']">{{
+                            contact.id
+                        }}</a>
+                    </td>
+                    <td>{{ contact.firstName }}</td>
+                    <td>{{ contact.lastName }}</td>
+                    <td>{{ contact.address1 }}</td>
+                    <td>{{ contact.address2 }}</td>
+                    <td>{{ contact.city }}</td>
+                    <td>{{ contact.state }}</td>
+                    <td>{{ contact.zipCode }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>{{ contact.phoneNumber }}</td>
+                    <td>{{ contact.birthDate | formatMediumDate }}</td>
+                    <td>{{ contact.created | formatMediumDate }}</td>
+                    <td>
+                        <a
+                            *ngIf="contact.imageData"
+                            (click)="
+                                openFile(
+                                    contact.imageData,
+                                    contact.imageDataContentType
+                                )
+                            "
+                        >
+                            <img
+                                [src]="
+                                    'data:' +
+                                    contact.imageDataContentType +
+                                    ';base64,' +
+                                    contact.imageData
+                                "
+                                style="max-height: 30px"
+                                alt="contact image"
+                            />
+                        </a>
+                        <span *ngIf="contact.imageData"
+                            >{{ contact.imageDataContentType }},
+                            {{ byteSize(contact.imageData) }}</span
+                        >
+                    </td>
+                    <td>{{ contact.imageType }}</td>
+                    <td>
+                        {{ contact.user?.login }}
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group">
+                            <button
+                                type="submit"
+                                [routerLink]="['/contact', contact.id, 'view']"
+                                class="btn btn-info btn-sm"
+                                data-cy="entityDetailsButton"
+                            >
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline">View</span>
+                            </button>
 
-  <jhi-alert></jhi-alert>
+                            <button
+                                type="submit"
+                                [routerLink]="['/contact', contact.id, 'edit']"
+                                class="btn btn-primary btn-sm"
+                                data-cy="entityEditButton"
+                            >
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline">Edit</span>
+                            </button>
 
-  <div
-    class="alert alert-warning"
-    id="no-result"
-    *ngIf="contacts?.length === 0"
-  >
-    <span>No contacts found</span>
-  </div>
-
-  <div
-    class="table-responsive"
-    id="entities"
-    *ngIf="contacts && contacts.length > 0"
-  >
-    <table class="table table-striped" aria-describedby="page-heading">
-      <thead>
-        <tr>
-          <th scope="col"><span>ID</span></th>
-          <th scope="col"><span>First Name</span></th>
-          <th scope="col"><span>Last Name</span></th>
-          <th scope="col"><span>Address 1</span></th>
-          <th scope="col"><span>Address 2</span></th>
-          <th scope="col"><span>City</span></th>
-          <th scope="col"><span>State</span></th>
-          <th scope="col"><span>Zip Code</span></th>
-          <th scope="col"><span>Email</span></th>
-          <th scope="col"><span>Phone Number</span></th>
-          <th scope="col"><span>Birth Date</span></th>
-          <th scope="col"><span>Created</span></th>
-          <th scope="col"><span>Image Data</span></th>
-          <th scope="col"><span>Image Type</span></th>
-          <th scope="col"><span>User</span></th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let contact of contacts; trackBy: trackId"
-          data-cy="entityTable"
-        >
-          <td>
-            <a [routerLink]="['/contact', contact.id, 'view']">{{
-              contact.id
-            }}</a>
-          </td>
-          <td>{{ contact.firstName }}</td>
-          <td>{{ contact.lastName }}</td>
-          <td>{{ contact.address1 }}</td>
-          <td>{{ contact.address2 }}</td>
-          <td>{{ contact.city }}</td>
-          <td>{{ contact.state }}</td>
-          <td>{{ contact.zipCode }}</td>
-          <td>{{ contact.email }}</td>
-          <td>{{ contact.phoneNumber }}</td>
-          <td>{{ contact.birthDate | formatMediumDate }}</td>
-          <td>{{ contact.created | formatMediumDate }}</td>
-          <td>
-            <a
-              *ngIf="contact.imageData"
-              (click)="
-                openFile(contact.imageData, contact.imageDataContentType)
-              "
-            >
-              <img
-                [src]="
-                  'data:' +
-                  contact.imageDataContentType +
-                  ';base64,' +
-                  contact.imageData
-                "
-                style="max-height: 30px"
-                alt="contact image"
-              />
-            </a>
-            <span *ngIf="contact.imageData"
-              >{{ contact.imageDataContentType }},
-              {{ byteSize(contact.imageData) }}</span
-            >
-          </td>
-          <td>{{ contact.imageType }}</td>
-          <td>
-            {{ contact.user?.login }}
-          </td>
-          <td class="text-end">
-            <div class="btn-group">
-              <button
-                type="submit"
-                [routerLink]="['/contact', contact.id, 'view']"
-                class="btn btn-info btn-sm"
-                data-cy="entityDetailsButton"
-              >
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline">View</span>
-              </button>
-
-              <button
-                type="submit"
-                [routerLink]="['/contact', contact.id, 'edit']"
-                class="btn btn-primary btn-sm"
-                data-cy="entityEditButton"
-              >
-                <fa-icon icon="pencil-alt"></fa-icon>
-                <span class="d-none d-md-inline">Edit</span>
-              </button>
-
-              <button
-                type="submit"
-                (click)="delete(contact)"
-                class="btn btn-danger btn-sm"
-                data-cy="entityDeleteButton"
-              >
-                <fa-icon icon="times"></fa-icon>
-                <span class="d-none d-md-inline">Delete</span>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+                            <button
+                                type="submit"
+                                (click)="delete(contact)"
+                                class="btn btn-danger btn-sm"
+                                data-cy="entityDeleteButton"
+                            >
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

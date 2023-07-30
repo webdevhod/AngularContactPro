@@ -1,0 +1,17 @@
+.category-row {
+    td {
+        vertical-align: middle;
+    }
+
+    .btn-group {
+        button {
+            border-radius: 4px;
+
+            $margin: 6px;
+            &:not(:first-child):not(:last-child) {
+                margin-right: $margin;
+                margin-left: $margin;
+            }
+        }
+    }
+}
