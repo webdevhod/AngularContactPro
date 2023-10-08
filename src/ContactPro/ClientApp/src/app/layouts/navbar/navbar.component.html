@@ -25,7 +25,8 @@
                     [routerLinkActiveOptions]="{ exact: true }"
                 >
                     <a
-                        class="nav-link active"
+                        class="nav-link"
+                        [ngClass]="{ active: getCurrentRoute() === '/' }"
                         aria-current="page"
                         routerLink="/"
                         >Home</a
@@ -33,10 +34,24 @@
                 </li>
                 <ng-container *ngIf="isAuthenticated()">
                     <li class="nav-item">
-                        <a class="nav-link" routerLink="contact">Contacts</a>
+                        <a
+                            class="nav-link"
+                            [ngClass]="{
+                                active: getCurrentRoute() === '/contact'
+                            }"
+                            routerLink="contact"
+                            >Contacts</a
+                        >
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" routerLink="category">Categories</a>
+                        <a
+                            class="nav-link"
+                            [ngClass]="{
+                                active: getCurrentRoute() === '/category'
+                            }"
+                            routerLink="category"
+                            >Categories</a
+                        >
                     </li>
                 </ng-container>
             </ul>

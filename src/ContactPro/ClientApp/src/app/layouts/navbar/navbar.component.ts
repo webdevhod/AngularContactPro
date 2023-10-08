@@ -73,4 +73,8 @@ export class NavbarComponent implements OnInit {
     toggleNavbar(): void {
         this.isNavbarCollapsed = !this.isNavbarCollapsed;
     }
+
+    getCurrentRoute(): string {
+        return this.router.url;
+    }
 }
