@@ -31,10 +31,7 @@
     "webapp:dev-ssl": "ng serve --ssl",
     "webapp:dev-verbose": "ng serve --verbose",
     "webapp:prod": "npm run clean-www && npm run webapp:build:prod",
-    "webapp:test": "npm run test --",
-    "docs:json": "compodoc -p ./tsconfig.json -e json -d .",
-    "storybook": "npm run docs:json && start-storybook -p 6006",
-    "build-storybook": "npm run docs:json && build-storybook"
+    "webapp:test": "npm run test --"
   },
   "config": {
     "default_environment": "prod"
@@ -70,16 +67,6 @@
     "@angular/cli": "13.3.1",
     "@angular/compiler-cli": "13.3.1",
     "@angular/service-worker": "13.3.1",
-    "@compodoc/compodoc": "^1.1.19",
-    "@storybook/addon-actions": "^6.5.6",
-    "@storybook/addon-essentials": "^6.5.6",
-    "@storybook/addon-interactions": "^6.5.6",
-    "@storybook/addon-links": "^6.5.6",
-    "@storybook/angular": "^6.5.6",
-    "@storybook/builder-webpack5": "^6.5.6",
-    "@storybook/jest": "^0.0.10",
-    "@storybook/manager-webpack5": "^6.5.6",
-    "@storybook/testing-library": "^0.0.11",
     "@types/jest": "27.4.1",
     "@types/node": "16.11.26",
     "@typescript-eslint/eslint-plugin": "5.18.0",
