@@ -70,6 +70,10 @@ export class NavbarComponent implements OnInit {
         this.router.navigate([""]);
     }
 
+    register(): void {
+        this.router.navigate(["/account/register"]);
+    }
+
     toggleNavbar(): void {
         this.isNavbarCollapsed = !this.isNavbarCollapsed;
     }
