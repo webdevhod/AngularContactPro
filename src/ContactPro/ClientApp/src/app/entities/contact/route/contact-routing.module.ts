@@ -3,7 +3,6 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { UserRouteAccessService } from "app/core/auth/user-route-access.service";
 import { ContactComponent } from "../list/contact.component";
-import { ContactDetailComponent } from "../detail/contact-detail.component";
 import { ContactUpdateComponent } from "../update/contact-update.component";
 import { ContactRoutingResolveService } from "./contact-routing-resolve.service";
 
@@ -15,7 +14,7 @@ const contactRoute: Routes = [
     },
     {
         path: "new",
-        component: ContactDetailComponent,
+        component: ContactUpdateComponent,
         resolve: {
             contact: ContactRoutingResolveService,
         },
@@ -23,7 +22,7 @@ const contactRoute: Routes = [
     },
     {
         path: ":id/edit",
-        component: ContactDetailComponent,
+        component: ContactUpdateComponent,
         resolve: {
             contact: ContactRoutingResolveService,
         },
