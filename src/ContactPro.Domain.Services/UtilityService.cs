@@ -42,6 +42,11 @@ namespace ContactPro.Domain.Services
             return DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
         }
 
+        public DateTime GetDateTimeInUtc(DateTime dateTime)
+        {
+            return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+        }
+
         public string GetAbsoluteUri()
         {
             var uriBuilder = new UriBuilder(_httpContextAccessor.HttpContext.Request.Scheme, _httpContextAccessor.HttpContext.Request.Host.Host, _httpContextAccessor.HttpContext.Request.Host.Port ?? -1);

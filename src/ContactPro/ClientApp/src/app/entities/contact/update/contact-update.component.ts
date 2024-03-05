@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from "@angular/core";
 import { HttpResponse } from "@angular/common/http";
 import { FormBuilder, Validators } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, UrlSegment } from "@angular/router";
 import { Observable } from "rxjs";
 import { finalize, map } from "rxjs/operators";
 
@@ -22,8 +22,10 @@ import { States } from "app/entities/enumerations/states.model";
     templateUrl: "./contact-update.component.html",
 })
 export class ContactUpdateComponent implements OnInit {
+    isNew = false;
     isSaving = false;
-    statesValues = Object.keys(States);
+    statesKeys = Object.keys(States);
+    blurredInputs: { [key: string]: boolean } = {};
 
     usersSharedCollection: IUser[] = [];
 
@@ -36,8 +38,21 @@ export class ContactUpdateComponent implements OnInit {
         city: [null, [Validators.required]],
         state: [null, [Validators.required]],
         zipCode: [null, [Validators.required]],
-        email: [null, [Validators.required]],
-        phoneNumber: [null, [Validators.required]],
+        email: [
+            null,
+            [
+                Validators.required,
+                Validators.email,
+                Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"),
+            ],
+        ],
+        phoneNumber: [
+            null,
+            [
+                Validators.required,
+                Validators.pattern("^[0-9]{3}-[0-9]{3}-[0-9]{4}$"),
+            ],
+        ],
         birthDate: [],
         created: [],
         imageData: [],
@@ -57,6 +72,10 @@ export class ContactUpdateComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.activatedRoute.url.subscribe((param: UrlSegment[]) => {
+            this.isNew = param.some((p) => p.path === "new");
+        });
+
         this.activatedRoute.data.subscribe(({ contact }) => {
             // eslint-disable-next-line no-console
             console.log("ngOnInit contact: ", contact);
@@ -93,6 +112,19 @@ export class ContactUpdateComponent implements OnInit {
             });
     }
 
+    setFileType(event: Event, field: string, isImage: boolean): void {
+        const eventTarget: HTMLInputElement | null =
+            event.target as HTMLInputElement | null;
+        if (eventTarget?.files?.[0]) {
+            const file: File = eventTarget.files[0];
+            if (isImage && file.type.startsWith("image/")) {
+                this.editForm.patchValue({
+                    imageType: file.type,
+                });
+            }
+        }
+    }
+
     clearInputImage(
         field: string,
         fieldContentType: string,
@@ -118,7 +150,7 @@ export class ContactUpdateComponent implements OnInit {
     save(): void {
         this.isSaving = true;
         const contact = this.createFromForm();
-        if (contact.id !== undefined) {
+        if (!this.isNew && contact.id !== undefined) {
             this.subscribeToSaveResponse(this.contactService.update(contact));
         } else {
             this.subscribeToSaveResponse(this.contactService.create(contact));
@@ -127,6 +159,31 @@ export class ContactUpdateComponent implements OnInit {
 
     trackUserById(_index: number, item: IUser): string {
         return item.id!;
+    }
+
+    handleBlur(field: string): void {
+        this.blurredInputs[field] = true;
+    }
+
+    handleFocus(field: string): void {
+        this.blurredInputs[field] = false;
+    }
+
+    isBlurred(field: string): boolean {
+        if (this.blurredInputs[field]) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    handleStateChange(event: Event): void {
+        // eslint-disable-next-line no-console
+        console.log("handleStateChange", event.target);
+    }
+
+    getStateValue(key: string): string {
+        return States[key as keyof typeof States];
     }
 
     protected subscribeToSaveResponse(
