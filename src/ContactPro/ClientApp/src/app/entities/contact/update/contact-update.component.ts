@@ -3,7 +3,7 @@ import { HttpResponse } from "@angular/common/http";
 import { FormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, UrlSegment } from "@angular/router";
 import { Observable } from "rxjs";
-import { finalize, map } from "rxjs/operators";
+import { finalize } from "rxjs/operators";
 
 import { IContact, Contact } from "../contact.model";
 import { ContactService } from "../service/contact.service";
@@ -16,18 +16,20 @@ import { DataUtils, FileLoadError } from "app/core/util/data-util.service";
 import { IUser } from "app/entities/user/user.model";
 import { UserService } from "app/entities/user/user.service";
 import { States } from "app/entities/enumerations/states.model";
+import { ICategory } from "app/entities/category/category.model";
+import { CategoryService } from "app/entities/category/service/category.service";
+import { ThemeService } from "app/theme.service";
 
 @Component({
     selector: "jhi-contact-update",
     templateUrl: "./contact-update.component.html",
+    styleUrls: ["./contact-update.component.scss"],
 })
 export class ContactUpdateComponent implements OnInit {
     isNew = false;
     isSaving = false;
     statesKeys = Object.keys(States);
     blurredInputs: { [key: string]: boolean } = {};
-
-    usersSharedCollection: IUser[] = [];
 
     editForm = this.fb.group({
         id: [],
@@ -50,7 +52,7 @@ export class ContactUpdateComponent implements OnInit {
             null,
             [
                 Validators.required,
-                Validators.pattern("^[0-9]{3}-[0-9]{3}-[0-9]{4}$"),
+                // Validators.pattern("^[0-9]{3}-[0-9]{3}-[0-9]{4}$"),
             ],
         ],
         birthDate: [],
@@ -59,16 +61,22 @@ export class ContactUpdateComponent implements OnInit {
         imageDataContentType: [],
         imageType: [],
         user: [],
+        categories: [],
     });
+
+    allCategories: ICategory[] = [];
+    selectedCategories: ICategory[] = [];
 
     constructor(
         protected dataUtils: DataUtils,
         protected eventManager: EventManager,
         protected contactService: ContactService,
+        protected categoryService: CategoryService,
         protected userService: UserService,
         protected elementRef: ElementRef,
         protected activatedRoute: ActivatedRoute,
-        protected fb: FormBuilder
+        protected fb: FormBuilder,
+        private themeService: ThemeService
     ) {}
 
     ngOnInit(): void {
@@ -77,12 +85,17 @@ export class ContactUpdateComponent implements OnInit {
         });
 
         this.activatedRoute.data.subscribe(({ contact }) => {
-            // eslint-disable-next-line no-console
-            console.log("ngOnInit contact: ", contact);
+            this.selectedCategories = contact.categories?.map(
+                (category: ICategory) => category.id
+            );
             this.updateForm(contact);
-
-            this.loadRelationshipsOptions();
         });
+
+        this.categoryService
+            .query()
+            .subscribe((res: HttpResponse<ICategory[]>) => {
+                this.allCategories = res.body ?? [];
+            });
     }
 
     byteSize(base64String: string): string {
@@ -177,11 +190,6 @@ export class ContactUpdateComponent implements OnInit {
         }
     }
 
-    handleStateChange(event: Event): void {
-        // eslint-disable-next-line no-console
-        console.log("handleStateChange", event.target);
-    }
-
     getStateValue(key: string): string {
         return States[key as keyof typeof States];
     }
@@ -225,33 +233,25 @@ export class ContactUpdateComponent implements OnInit {
             imageDataContentType: contact.imageDataContentType,
             imageType: contact.imageType,
             user: contact.user,
+            categories: this.selectedCategories,
         });
 
-        this.usersSharedCollection =
-            this.userService.addUserToCollectionIfMissing(
-                this.usersSharedCollection,
-                contact.user
-            );
-    }
-
-    protected loadRelationshipsOptions(): void {
-        this.userService
-            .query()
-            .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
-            .pipe(
-                map((users: IUser[]) =>
-                    this.userService.addUserToCollectionIfMissing(
-                        users,
-                        this.editForm.get("user")!.value
-                    )
-                )
-            )
-            .subscribe(
-                (users: IUser[]) => (this.usersSharedCollection = users)
-            );
+        // eslint-disable-next-line no-console
+        console.log("updateForm: ", this.editForm);
     }
 
     protected createFromForm(): IContact {
+        // eslint-disable-next-line no-console
+        console.log("createFromForm: ", this.editForm.get(["categories"]));
+        const categories = this.allCategories.filter(
+            (allCategory) =>
+                this.selectedCategories.find(
+                    (selectedCategory) => allCategory.id === selectedCategory
+                ) !== undefined
+        );
+        // eslint-disable-next-line no-console
+        console.log("categories: ", categories);
+
         return {
             ...new Contact(),
             id: this.editForm.get(["id"])!.value,
@@ -271,6 +271,7 @@ export class ContactUpdateComponent implements OnInit {
             imageData: this.editForm.get(["imageData"])!.value,
             imageType: this.editForm.get(["imageType"])!.value,
             user: this.editForm.get(["user"])!.value,
+            categories,
         };
     }
 }

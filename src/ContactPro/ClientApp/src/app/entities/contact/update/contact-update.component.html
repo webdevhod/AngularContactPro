@@ -350,18 +350,16 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 mt-3">
-                            <label asp-for="CategoryList" class="control-label"
-                                >Categories</label
-                            >
-                            <select
-                                class="form-select"
-                                multiple
-                                aria-label="multiple select example"
-                            >
-                                <option selected>Friends</option>
-                                <option value="1">Family</option>
-                                <option value="2">Wedding</option>
-                            </select>
+                            <label class="control-label">Categories</label>
+                            <p-multiSelect
+                                [options]="allCategories"
+                                [(ngModel)]="selectedCategories"
+                                optionLabel="name"
+                                optionValue="id"
+                                [ngModelOptions]="{ standalone: true }"
+                                display="chip"
+                                placeholder="Select"
+                            ></p-multiSelect>
                         </div>
                         <div class="col-12 col-lg-6 mt-3">
                             <label for="field_birthDate" class="control-label"

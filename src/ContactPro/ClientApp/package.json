@@ -37,6 +37,8 @@
     "default_environment": "prod"
   },
   "dependencies": {
+    "@angular/animations": "^13.3.1",
+    "@angular/cdk": "^13.3.9",
     "@angular/common": "13.3.1",
     "@angular/compiler": "13.3.1",
     "@angular/core": "13.3.1",
@@ -55,6 +57,7 @@
     "dayjs": "1.11.0",
     "ngx-infinite-scroll": "13.0.1",
     "ngx-webstorage": "9.0.0",
+    "primeng": "^13.4.1",
     "rxjs": "7.5.5",
     "tslib": "2.3.1",
     "zone.js": "0.11.4"

@@ -36,6 +36,9 @@
               "src/robots.txt"
             ],
             "styles": [
+              "node_modules/primeng/resources/themes/saga-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeicons/primeicons.css",
               "src/content/scss/vendor.scss",
               "src/content/scss/global.scss"
             ],

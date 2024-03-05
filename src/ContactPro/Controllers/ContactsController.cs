@@ -103,7 +103,7 @@ namespace ContactPro.Controllers
             {
                 searchTerm = Regex.Replace(HttpUtility.UrlDecode(searchTerm, System.Text.Encoding.UTF8).ToLower(), @"\s+", " ");
                 result = await _contactRepository.QueryHelper()
-                    .Filter(c => c.UserId != null && _utilityService.GetCurrentUserId().Equals(c.UserId) && ((c.FirstName + " " + c.LastName).ToLower().Contains(searchTerm) || (c.LastName + " " + c.FirstName).ToLower().Contains(searchTerm)))
+                    .Filter(c => c.User.Id != null && _utilityService.GetCurrentUserId().Equals(c.User.Id) && ((c.FirstName + " " + c.LastName).ToLower().Contains(searchTerm) || (c.LastName + " " + c.FirstName).ToLower().Contains(searchTerm)))
                     .GetPageAsync(pageable);
             }
             else if (Int64.TryParse(categoryId, out long id))
@@ -111,7 +111,7 @@ namespace ContactPro.Controllers
                 if (id > 0)
                 {
                     result = await _contactRepository.QueryHelper()
-                    .Filter(c => c.UserId != null && _utilityService.GetCurrentUserId().Equals(c.UserId) && c.Categories.Any(category => category.Id == id))
+                    .Filter(c => c.User.Id != null && _utilityService.GetCurrentUserId().Equals(c.User.Id) && c.Categories.Any(category => category.Id == id))
                     .GetPageAsync(pageable);
                 }
             }
@@ -120,7 +120,7 @@ namespace ContactPro.Controllers
             {
                 Console.WriteLine("result is null");
                 result = await _contactRepository.QueryHelper()
-                    .Filter(c => c.UserId != null && _utilityService.GetCurrentUserId().Equals(c.UserId))
+                    .Filter(c => c.User.Id != null && _utilityService.GetCurrentUserId().Equals(c.User.Id))
                     .GetPageAsync(pageable);
             }
 
@@ -133,7 +133,7 @@ namespace ContactPro.Controllers
             _log.LogDebug($"REST request to get Contact : {id}");
             var result = await _contactRepository.QueryHelper()
                 .Include(contact => contact.Categories)
-                .GetOneAsync(contact => contact.Id == id && _utilityService.GetCurrentUserId().Equals(contact.UserId));
+                .GetOneAsync(contact => contact.Id == id && _utilityService.GetCurrentUserId().Equals(contact.User.Id));
             return ActionResultUtil.WrapOrNotFound(result);
         }
 
@@ -143,7 +143,7 @@ namespace ContactPro.Controllers
             _log.LogDebug($"REST request to get Email Contact : {id}");
             var result = await _contactRepository.QueryHelper()
                 .Include(contact => contact.Categories)
-                .GetOneAsync(contact => contact.Id == id && _utilityService.GetCurrentUserId().Equals(contact.UserId));
+                .GetOneAsync(contact => contact.Id == id && _utilityService.GetCurrentUserId().Equals(contact.User.Id));
             if (result == null) throw new BadRequestAlertException("Invalid Id", EntityName, "idnull");
             EmailData emailData = new EmailData();
             emailData.Id = id;
@@ -161,7 +161,7 @@ namespace ContactPro.Controllers
             foreach (Contact contact in emailData.Contacts)
             {
                 var result = await _contactRepository.QueryHelper()
-                    .GetOneAsync(c => c.Id == contact.Id && _utilityService.GetCurrentUserId().Equals(c.UserId));
+                    .GetOneAsync(c => c.Id == contact.Id && _utilityService.GetCurrentUserId().Equals(c.User.Id));
                 if (result == null) throw new BadRequestAlertException("Invalid Id", EntityName, "idnull");
                 contacts.Add(result);
             }
@@ -176,7 +176,7 @@ namespace ContactPro.Controllers
         {
             _log.LogDebug($"REST request to delete Contact : {id}");
             Contact contact = await _contactRepository.QueryHelper()
-                .GetOneAsync(contact => contact.Id == id && _utilityService.GetCurrentUserId().Equals(contact.UserId));
+                .GetOneAsync(contact => contact.Id == id && _utilityService.GetCurrentUserId().Equals(contact.User.Id));
             if (contact == null) throw new BadRequestAlertException("Invalid Id", EntityName, "idnull");
             await _contactRepository.DeleteByIdAsync(id);
             await _contactRepository.SaveChangesAsync();
