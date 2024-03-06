@@ -63,8 +63,9 @@ namespace ContactPro.Test.Controllers
         private static readonly DateTime? DefaultCreated = DateTime.UnixEpoch;
         private static readonly DateTime? UpdatedCreated = DateTime.UtcNow;
 
-        private static readonly LOOK_FOR_AN_EQUIVALENT DefaultImageData = ;
-        private static readonly LOOK_FOR_AN_EQUIVALENT UpdatedImageData = ;
+        private static readonly byte[] DefaultImageData = new byte[0];
+
+        private static readonly byte[] UpdatedImageData = { 0x01, 0x02, 0x03, 0x04 };
 
         private const string DefaultImageType = "AAAAAAAAAA";
         private const string UpdatedImageType = "BBBBBBBBBB";
@@ -125,7 +126,7 @@ namespace ContactPro.Test.Controllers
             testContact.PhoneNumber.Should().Be(DefaultPhoneNumber);
             testContact.BirthDate.Should().Be(DefaultBirthDate);
             testContact.Created.Should().Be(DefaultCreated);
-            testContact.ImageData.Should().Be(DefaultImageData);
+            testContact.ImageData.Should().Equal(DefaultImageData);
             testContact.ImageType.Should().Be(DefaultImageType);
         }
 
@@ -215,7 +216,7 @@ namespace ContactPro.Test.Controllers
             var databaseSizeBeforeTest = await _contactRepository.CountAsync();
 
             // Set the field to null
-            _contact.State = null;
+            // _contact.State = None;
 
             // Create the Contact, which fails.
             var response = await _client.PostAsync("/api/contacts", TestUtil.ToJsonContent(_contact));
@@ -381,7 +382,7 @@ namespace ContactPro.Test.Controllers
             testContact.PhoneNumber.Should().Be(UpdatedPhoneNumber);
             testContact.BirthDate.Should().Be(UpdatedBirthDate);
             testContact.Created.Should().Be(UpdatedCreated);
-            testContact.ImageData.Should().Be(UpdatedImageData);
+            testContact.ImageData.Should().Equal(UpdatedImageData);
             testContact.ImageType.Should().Be(UpdatedImageType);
         }
 
