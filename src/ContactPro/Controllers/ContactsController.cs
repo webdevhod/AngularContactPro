@@ -77,13 +77,23 @@ namespace ContactPro.Controllers
             _log.LogDebug($"REST request to update Contact : {contact}");
             if (contact.Id == 0) throw new BadRequestAlertException("Invalid Id", EntityName, "idnull");
             if (id != contact.Id) throw new BadRequestAlertException("Invalid Id", EntityName, "idinvalid");
-            if (!_utilityService.GetCurrentUserId().Equals(contact.User.Id)) throw new BadRequestAlertException("User Id and Contact User Id doesn't match", EntityName, "useridmatch");
 
-            Contact oldContact = await _contactRepository.QueryHelper().Include(c => c.Categories).GetOneAsync(contact => contact.Id == id && _utilityService.GetCurrentUserId().Equals(contact.UserId));
+            Contact oldContact = await _contactRepository.QueryHelper().Include(c => c.Categories).GetOneAsync(c => c.Id == id && _utilityService.GetCurrentUserId().Equals(c.UserId));
             if (oldContact == null) throw new BadRequestAlertException("Invalid Contact Id or User Id", EntityName, "idnull");
 
             contact.Created = _utilityService.GetDateTimeInUtc(oldContact.Created ?? DateTime.UtcNow);
+            contact.UserId = _utilityService.GetCurrentUserId();
+
             await ClearOldCategories(oldContact);
+
+            ICollection<Category> categories = new HashSet<Category>();
+            foreach (Category category in contact.Categories)
+            {
+                Category categoryFetched = await _categoryRepository.QueryHelper().Include(c => c.Contacts).GetOneAsync(c => c.Id == category.Id && c.User.Id.Equals(_utilityService.GetCurrentUserId()));
+                if (categoryFetched is null) throw new BadRequestAlertException("Invalid Contact Id or User Id", EntityName, "idnull");
+                categoryFetched.Contacts.Add(oldContact);
+            }
+            contact.Categories = categories;
 
             await _contactRepository.CreateOrUpdateAsync(contact);
             await _contactRepository.SaveChangesAsync();
@@ -185,15 +195,20 @@ namespace ContactPro.Controllers
 
         private async Task ClearOldCategories(Contact oldContact)
         {
+            int count = 0;
             foreach (Category category in oldContact.Categories)
             {
                 Category oldCategory = await _categoryRepository.QueryHelper().Include(c => c.Contacts).GetOneAsync(c => c.Id == category.Id && c.UserId.Equals(_utilityService.GetCurrentUserId()));
                 if (oldCategory is null) throw new BadRequestAlertException("Invalid Contact Id or User Id", EntityName, "idnull");
                 oldCategory.Contacts.Remove(oldContact);
                 await _categoryRepository.CreateOrUpdateAsync(oldCategory);
+                ++count;
             }
 
-            if (oldContact.Categories.Length() > 0) await _categoryRepository.SaveChangesAsync();
+            if (count > 0) await _categoryRepository.SaveChangesAsync();
+
+            oldContact.Categories = new HashSet<Category>();
+            await _contactRepository.CreateOrUpdateAsync(oldContact);
         }
     }
 }

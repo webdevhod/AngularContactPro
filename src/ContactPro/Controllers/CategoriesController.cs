@@ -85,8 +85,10 @@ namespace ContactPro.Controllers
             oldCategory.Contacts = new HashSet<Contact>();
             await _categoryRepository.CreateOrUpdateAsync(oldCategory);
             await _categoryRepository.SaveChangesAsync();
+
             await _categoryRepository.CreateOrUpdateAsync(category);
             await _categoryRepository.SaveChangesAsync();
+
             return Ok(category)
                 .WithHeaders(HeaderUtil.CreateEntityUpdateAlert(category.Name, EntityName, category.Id.ToString()));
         }
