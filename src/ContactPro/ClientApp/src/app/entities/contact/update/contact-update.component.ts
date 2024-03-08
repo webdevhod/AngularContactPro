@@ -18,7 +18,7 @@ import { UserService } from "app/entities/user/user.service";
 import { States } from "app/entities/enumerations/states.model";
 import { ICategory } from "app/entities/category/category.model";
 import { CategoryService } from "app/entities/category/service/category.service";
-import { ThemeService } from "app/theme.service";
+// import { ThemeService } from "app/theme.service";
 
 @Component({
     selector: "jhi-contact-update",
@@ -62,10 +62,11 @@ export class ContactUpdateComponent implements OnInit {
         imageType: [],
         user: [],
         categories: [],
+        userId: [],
     });
 
     allCategories: ICategory[] = [];
-    selectedCategories: ICategory[] = [];
+    selectedCategories: number[] = [];
 
     constructor(
         protected dataUtils: DataUtils,
@@ -75,8 +76,7 @@ export class ContactUpdateComponent implements OnInit {
         protected userService: UserService,
         protected elementRef: ElementRef,
         protected activatedRoute: ActivatedRoute,
-        protected fb: FormBuilder,
-        private themeService: ThemeService
+        protected fb: FormBuilder // private themeService: ThemeService
     ) {}
 
     ngOnInit(): void {
@@ -85,9 +85,9 @@ export class ContactUpdateComponent implements OnInit {
         });
 
         this.activatedRoute.data.subscribe(({ contact }) => {
-            this.selectedCategories = contact.categories?.map(
-                (category: ICategory) => category.id
-            );
+            this.selectedCategories =
+                contact.categories?.map((category: ICategory) => category.id) ??
+                [];
             this.updateForm(contact);
         });
 
@@ -194,6 +194,16 @@ export class ContactUpdateComponent implements OnInit {
         return States[key as keyof typeof States];
     }
 
+    getSelectedCategories(): ICategory[] {
+        const selectedCategories: Set<number> = new Set(
+            this.selectedCategories
+        );
+
+        return this.allCategories.filter(
+            (category) => category.id && selectedCategories.has(category.id)
+        );
+    }
+
     protected subscribeToSaveResponse(
         result: Observable<HttpResponse<IContact>>
     ): void {
@@ -233,25 +243,12 @@ export class ContactUpdateComponent implements OnInit {
             imageDataContentType: contact.imageDataContentType,
             imageType: contact.imageType,
             user: contact.user,
-            categories: this.selectedCategories,
+            userId: contact.userId,
+            categories: this.getSelectedCategories(),
         });
-
-        // eslint-disable-next-line no-console
-        console.log("updateForm: ", this.editForm);
     }
 
     protected createFromForm(): IContact {
-        // eslint-disable-next-line no-console
-        console.log("createFromForm: ", this.editForm.get(["categories"]));
-        const categories = this.allCategories.filter(
-            (allCategory) =>
-                this.selectedCategories.find(
-                    (selectedCategory) => allCategory.id === selectedCategory
-                ) !== undefined
-        );
-        // eslint-disable-next-line no-console
-        console.log("categories: ", categories);
-
         return {
             ...new Contact(),
             id: this.editForm.get(["id"])!.value,
@@ -271,7 +268,8 @@ export class ContactUpdateComponent implements OnInit {
             imageData: this.editForm.get(["imageData"])!.value,
             imageType: this.editForm.get(["imageType"])!.value,
             user: this.editForm.get(["user"])!.value,
-            categories,
+            userId: this.editForm.get(["userId"])!.value,
+            categories: this.getSelectedCategories(),
         };
     }
 }

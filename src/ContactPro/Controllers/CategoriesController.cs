@@ -59,10 +59,10 @@ namespace ContactPro.Controllers
             if (category.Id != 0)
                 throw new BadRequestAlertException("A new category cannot already have an ID", EntityName, "idexists");
 
-            category.Created = _utilityService.GetNowInUtc();           
+            category.Created = _utilityService.GetNowInUtc();
             category.UserId = _utilityService.GetCurrentUserId();
             await CheckAllContacts(category);
-            
+
             await _categoryRepository.CreateOrUpdateAsync(category);
             await _categoryRepository.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCategory), new { id = category.Id }, category)
@@ -76,10 +76,10 @@ namespace ContactPro.Controllers
             _log.LogDebug($"REST request to update Category : {category}");
             if (category.Id == 0) throw new BadRequestAlertException("Invalid Id", EntityName, "idnull");
             if (id != category.Id) throw new BadRequestAlertException("Invalid Id", EntityName, "idinvalid");
-            if (!_utilityService.GetCurrentUserId().Equals(category.UserId)) throw new BadRequestAlertException("User Id and Category User Id doesn't match", EntityName, "useridmatch");            
-            Category oldCategory = await _categoryRepository.QueryHelper().GetOneAsync(c => c.Id == id && _utilityService.GetCurrentUserId().Equals(c.UserId));
+            if (!_utilityService.GetCurrentUserId().Equals(category.UserId)) throw new BadRequestAlertException("User Id and Category User Id doesn't match", EntityName, "useridmatch");
+            Category oldCategory = await _categoryRepository.QueryHelper().GetOneAsync(c => c.Id == id && _utilityService.GetCurrentUserId().Equals(c.User.Id));
             if (oldCategory == null) throw new BadRequestAlertException("Invalid Category Id or User Id", EntityName, "idnull");
-            
+
             await CheckAllContacts(category);
 
             oldCategory.Contacts = new HashSet<Contact>();
@@ -96,21 +96,21 @@ namespace ContactPro.Controllers
         {
             _log.LogDebug("REST request to get a page of Categories");
             IPage<Category> result = null;
-            
+
             if (eagerLoad)
             {
                 result = await _categoryRepository.QueryHelper()
                     .Include(c => c.Contacts)
-                    .Filter(c => c.UserId != null && _utilityService.GetCurrentUserId().Equals(c.UserId))                
+                    .Filter(c => c.UserId != null && _utilityService.GetCurrentUserId().Equals(c.UserId))
                     .GetPageAsync(pageable);
             }
             else
             {
                 result = await _categoryRepository.QueryHelper()
-                    .Filter(c => c.UserId != null && _utilityService.GetCurrentUserId().Equals(c.UserId))                
+                    .Filter(c => c.UserId != null && _utilityService.GetCurrentUserId().Equals(c.UserId))
                     .GetPageAsync(pageable);
             }
-            
+
             return Ok(result.Content).WithHeaders(result.GeneratePaginationHttpHeaders());
         }
 
@@ -135,7 +135,7 @@ namespace ContactPro.Controllers
             EmailData emailData = new EmailData();
             emailData.Id = id;
             emailData.IsCategory = true;
-            foreach(Contact contact in result.Contacts)
+            foreach (Contact contact in result.Contacts)
             {
                 emailData.Contacts.Add(contact);
             }
@@ -143,19 +143,19 @@ namespace ContactPro.Controllers
         }
 
         [HttpPut("{id}/email")]
-        [Authorize(Roles=RolesConstants.ADMIN + "," + RolesConstants.USER)]
+        [Authorize(Roles = RolesConstants.ADMIN + "," + RolesConstants.USER)]
         public async Task<IActionResult> SendEmailContact([FromBody] EmailData emailData)
         {
             _log.LogDebug($"REST request to post Email Category : {emailData.Id}");
             ICollection<Contact> contacts = new HashSet<Contact>();
-            foreach(Contact contact in emailData.Contacts)
+            foreach (Contact contact in emailData.Contacts)
             {
                 var result = await _contactRepository.QueryHelper()
                     .GetOneAsync(c => c.Id == contact.Id && _utilityService.GetCurrentUserId().Equals(c.UserId));
                 if (result == null) throw new BadRequestAlertException("Invalid Id", EntityName, "idnull");
                 contacts.Add(result);
             }
-            
+
             await _emailService.SendEmailAsync(contacts, emailData.Subject, emailData.Body);
 
             return NoContent().WithHeaders(HeaderUtil.CreateEntityEmailAlert(string.Join(", ", emailData.Contacts.Select(c => c.Email).ToList()), EntityName, emailData.Id.ToString()));
@@ -177,7 +177,7 @@ namespace ContactPro.Controllers
 
         private async Task CheckAllContacts(Category category)
         {
-            foreach(Contact contact in category.Contacts)
+            foreach (Contact contact in category.Contacts)
             {
                 Contact fetchedContact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contact.Id && _utilityService.GetCurrentUserId().Equals(c.UserId));
                 if (fetchedContact is null) throw new BadRequestAlertException("Invalid Contact Id", EntityName, "idinvalid");

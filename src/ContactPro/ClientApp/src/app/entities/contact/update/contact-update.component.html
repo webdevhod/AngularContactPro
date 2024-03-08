@@ -357,7 +357,11 @@
                                 optionLabel="name"
                                 optionValue="id"
                                 [ngModelOptions]="{ standalone: true }"
-                                display="chip"
+                                [display]="
+                                    selectedCategories.length > 3
+                                        ? 'comma'
+                                        : 'chip'
+                                "
                                 placeholder="Select"
                             ></p-multiSelect>
                         </div>

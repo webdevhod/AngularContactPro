@@ -3,7 +3,7 @@ import { HttpResponse } from "@angular/common/http";
 import { FormBuilder, Validators } from "@angular/forms";
 import { ActivatedRoute, UrlSegment } from "@angular/router";
 import { Observable } from "rxjs";
-import { finalize, map } from "rxjs/operators";
+import { finalize } from "rxjs/operators";
 
 import { ICategory, Category } from "../category.model";
 import { CategoryService } from "../service/category.service";
@@ -22,6 +22,8 @@ export class CategoryUpdateComponent implements OnInit {
     isNew = true;
 
     contactsSharedCollection: IContact[] = [];
+    allContacts: IContact[] = [];
+    selectedContacts: number[] = [];
     usersSharedCollection: IUser[] = [];
 
     editForm = this.fb.group({
@@ -30,6 +32,7 @@ export class CategoryUpdateComponent implements OnInit {
         created: [],
         contacts: [],
         user: [],
+        userId: [],
     });
 
     constructor(
@@ -44,11 +47,19 @@ export class CategoryUpdateComponent implements OnInit {
         this.activatedRoute.data.subscribe(({ category }) => {
             this.updateForm(category);
 
-            this.loadRelationshipsOptions();
+            this.selectedContacts = category.contacts.map(
+                (contact: IContact) => contact.id
+            );
         });
 
         this.activatedRoute.url.subscribe((param: UrlSegment[]) => {
             this.isNew = param.some((p) => p.path === "new");
+        });
+
+        this.contactService.query().subscribe({
+            next: (res: HttpResponse<IContact[]>) => {
+                this.allContacts = res.body ?? [];
+            },
         });
     }
 
@@ -85,6 +96,24 @@ export class CategoryUpdateComponent implements OnInit {
         return option;
     }
 
+    getSelectedContacts(): IContact[] {
+        const selectedContacts: Set<number | undefined> = new Set(
+            this.selectedContacts
+        );
+        const filteredContacts = this.allContacts.filter((contact) =>
+            selectedContacts.has(contact.id)
+        );
+        return this.allContacts.filter((contact) =>
+            selectedContacts.has(contact.id)
+        );
+    }
+
+    getOptionLabel(option: IContact): string {
+        return `${option.firstName ?? ""} ${option.lastName ?? ""} <${
+            option.email ?? ""
+        }>`;
+    }
+
     protected subscribeToSaveResponse(
         result: Observable<HttpResponse<ICategory>>
     ): void {
@@ -111,53 +140,10 @@ export class CategoryUpdateComponent implements OnInit {
             id: category.id,
             name: category.name,
             created: category.created,
-            contacts: category.contacts,
+            contacts: this.getSelectedContacts(),
             user: category.user,
+            userId: category.userId,
         });
-
-        this.contactsSharedCollection =
-            this.contactService.addContactToCollectionIfMissing(
-                this.contactsSharedCollection,
-                ...(category.contacts ?? [])
-            );
-        this.usersSharedCollection =
-            this.userService.addUserToCollectionIfMissing(
-                this.usersSharedCollection,
-                category.user
-            );
-    }
-
-    protected loadRelationshipsOptions(): void {
-        this.contactService
-            .query()
-            .pipe(map((res: HttpResponse<IContact[]>) => res.body ?? []))
-            .pipe(
-                map((contacts: IContact[]) =>
-                    this.contactService.addContactToCollectionIfMissing(
-                        contacts,
-                        ...(this.editForm.get("contacts")!.value ?? [])
-                    )
-                )
-            )
-            .subscribe(
-                (contacts: IContact[]) =>
-                    (this.contactsSharedCollection = contacts)
-            );
-
-        this.userService
-            .query()
-            .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
-            .pipe(
-                map((users: IUser[]) =>
-                    this.userService.addUserToCollectionIfMissing(
-                        users,
-                        this.editForm.get("user")!.value
-                    )
-                )
-            )
-            .subscribe(
-                (users: IUser[]) => (this.usersSharedCollection = users)
-            );
     }
 
     protected createFromForm(): ICategory {
@@ -166,8 +152,9 @@ export class CategoryUpdateComponent implements OnInit {
             id: this.editForm.get(["id"])!.value,
             name: this.editForm.get(["name"])!.value,
             created: this.editForm.get(["created"])!.value,
-            contacts: this.editForm.get(["contacts"])!.value,
+            contacts: this.getSelectedContacts(),
             user: this.editForm.get(["user"])!.value,
+            userId: this.editForm.get(["userId"])!.value,
         };
     }
 }
