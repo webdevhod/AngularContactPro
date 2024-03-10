@@ -1,7 +1,12 @@
 :host {
-    ::ng-deep {
-        .p-multiselect {
-            width: 100%;
-        }
+  ::ng-deep {
+    .p-multiselect {
+      width: 100%;
     }
+
+    .btn-secondary,
+    .btn-outline-secondary {
+      border-color: lightgrey;
+    }
+  }
 }

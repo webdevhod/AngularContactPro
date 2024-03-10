@@ -1,398 +1,180 @@
 <section class="container">
-    <h1>EDIT CONTACT</h1>
-    <div class="p-3 border border-2 shadow-lg bg-light">
-        <form
-            name="editForm"
-            role="form"
-            novalidate
-            (ngSubmit)="save()"
-            [formGroup]="editForm"
-        >
-            <div class="row mb-3" [hidden]="true">
-                <label class="form-label" for="field_id">ID</label>
-                <input
-                    type="number"
-                    class="form-control"
-                    name="id"
-                    id="field_id"
-                    data-cy="id"
-                    formControlName="id"
-                    [readonly]="true"
-                />
+  <h1>EDIT CONTACT</h1>
+  <div class="p-3 border border-2 shadow-lg bg-light">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <div class="row mb-3" [hidden]="true">
+        <label class="form-label" for="field_id">ID</label>
+        <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+      </div>
+      <div class="row g-3 p-2">
+        <div class="col-12 col-lg-4">
+          <div class="square-img-container">
+            <img
+              [src]="'data:' + editForm.get('imageType')!.value + ';base64,' + editForm.get('imageData')!.value"
+              style="max-height: 100px"
+              *ngIf="editForm.get('imageData')!.value"
+              alt="contact image"
+            />
+          </div>
+          <div>
+            <input
+              type="file"
+              id="file_imageData"
+              data-cy="imageData"
+              style="color: transparent"
+              (change)="setFileData($event, 'imageData', true); setFileType($event, 'imageType', true)"
+              accept="image/*"
+            />
+          </div>
+          <input type="hidden" class="form-control" name="imageData" id="field_imageData" data-cy="imageData" formControlName="imageData" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="imageDataContentType"
+            id="field_imageDataContentType"
+            formControlName="imageDataContentType"
+          />
+        </div>
+        <div class="col-12 col-lg-8">
+          <div class="row">
+            <div class="col-12 col-lg-6">
+              <label for="field_firstName" class="form-label">First Name</label>
+              <input
+                type="text"
+                class="form-control"
+                name="firstName"
+                id="field_firstName"
+                data-cy="firstName"
+                formControlName="firstName"
+              />
+              <div *ngIf="editForm.get('firstName')!.invalid && (editForm.get('firstName')!.dirty || editForm.get('firstName')!.touched)">
+                <small class="form-text text-danger" *ngIf="editForm.get('firstName')?.errors?.required"> This field is required. </small>
+              </div>
             </div>
-            <div class="row g-3 p-2">
-                <div class="col-12 col-lg-4">
-                    <div class="square-img-container">
-                        <img
-                            [src]="
-                                'data:' +
-                                editForm.get('imageType')!.value +
-                                ';base64,' +
-                                editForm.get('imageData')!.value
-                            "
-                            style="max-height: 100px"
-                            *ngIf="editForm.get('imageData')!.value"
-                            alt="contact image"
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="file"
-                            id="file_imageData"
-                            data-cy="imageData"
-                            style="color: transparent"
-                            (change)="
-                                setFileData($event, 'imageData', true);
-                                setFileType($event, 'imageType', true)
-                            "
-                            accept="image/*"
-                        />
-                    </div>
-                    <input
-                        type="hidden"
-                        class="form-control"
-                        name="imageData"
-                        id="field_imageData"
-                        data-cy="imageData"
-                        formControlName="imageData"
-                    />
-                    <input
-                        type="hidden"
-                        class="form-control"
-                        name="imageDataContentType"
-                        id="field_imageDataContentType"
-                        formControlName="imageDataContentType"
-                    />
-                </div>
-                <div class="col-12 col-lg-8">
-                    <div class="row">
-                        <div class="col-12 col-lg-6">
-                            <label for="field_firstName" class="form-label"
-                                >First Name</label
-                            >
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="firstName"
-                                id="field_firstName"
-                                data-cy="firstName"
-                                formControlName="firstName"
-                            />
-                            <div
-                                *ngIf="
-                                    editForm.get('firstName')!.invalid &&
-                                    (editForm.get('firstName')!.dirty ||
-                                        editForm.get('firstName')!.touched)
-                                "
-                            >
-                                <small
-                                    class="form-text text-danger"
-                                    *ngIf="
-                                        editForm.get('firstName')?.errors
-                                            ?.required
-                                    "
-                                >
-                                    This field is required.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6">
-                            <label for="field_lastName" class="form-label"
-                                >Last Name</label
-                            >
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="lastName"
-                                id="field_lastName"
-                                data-cy="lastName"
-                                formControlName="lastName"
-                            />
-                            <div
-                                *ngIf="
-                                    editForm.get('lastName')!.invalid &&
-                                    (editForm.get('lastName')!.dirty ||
-                                        editForm.get('lastName')!.touched)
-                                "
-                            >
-                                <small
-                                    class="form-text text-danger"
-                                    *ngIf="
-                                        editForm.get('lastName')?.errors
-                                            ?.required
-                                    "
-                                >
-                                    This field is required.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 mt-2">
-                            <label for="field_email" class="form-label"
-                                >Email</label
-                            >
-                            <input
-                                type="email"
-                                class="form-control"
-                                name="email"
-                                id="field_email"
-                                data-cy="email"
-                                formControlName="email"
-                                (focus)="handleFocus('email')"
-                                (blur)="handleBlur('email')"
-                            />
-                            <div
-                                *ngIf="
-                                    editForm.get('email')!.invalid &&
-                                    (editForm.get('email')!.dirty ||
-                                        editForm.get('email')!.touched)
-                                "
-                            >
-                                <small
-                                    class="form-text text-danger"
-                                    *ngIf="
-                                        editForm.get('email')?.errors?.required
-                                    "
-                                >
-                                    This field is required.
-                                </small>
-                                <small
-                                    class="form-text text-danger"
-                                    *ngIf="
-                                        !editForm.get('email')?.errors
-                                            ?.required &&
-                                        isBlurred('email') &&
-                                        editForm.get('email')?.invalid
-                                    "
-                                >
-                                    Email is invalid.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 mt-2">
-                            <label for="field_phoneNumber" class="form-label"
-                                >Phone</label
-                            >
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="phoneNumber"
-                                id="field_phoneNumber"
-                                data-cy="phoneNumber"
-                                formControlName="phoneNumber"
-                                (focus)="handleFocus('phoneNumber')"
-                                (blur)="handleBlur('phoneNumber')"
-                            />
-                            <div
-                                *ngIf="
-                                    editForm.get('phoneNumber')!.invalid &&
-                                    (editForm.get('phoneNumber')!.dirty ||
-                                        editForm.get('phoneNumber')!.touched)
-                                "
-                            >
-                                <small
-                                    class="form-text text-danger"
-                                    *ngIf="
-                                        editForm.get('phoneNumber')?.errors
-                                            ?.required
-                                    "
-                                >
-                                    This field is required.
-                                </small>
-                                <small
-                                    class="form-text text-danger"
-                                    *ngIf="
-                                        !editForm.get('phoneNumber')?.errors
-                                            ?.required &&
-                                        isBlurred('phoneNumber') &&
-                                        editForm.get('phoneNumber')?.invalid
-                                    "
-                                >
-                                    Use XXX-XXX-XXXX format.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-12 mt-2">
-                            <label for="field_address1" class="form-label"
-                                >Address</label
-                            >
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="address1"
-                                id="field_address1"
-                                data-cy="address1"
-                                formControlName="address1"
-                            />
-                            <div
-                                *ngIf="
-                                    editForm.get('address1')!.invalid &&
-                                    (editForm.get('address1')!.dirty ||
-                                        editForm.get('address1')!.touched)
-                                "
-                            >
-                                <small
-                                    class="form-text text-danger"
-                                    *ngIf="
-                                        editForm.get('address1')?.errors
-                                            ?.required
-                                    "
-                                >
-                                    This field is required.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-12 mt-2">
-                            <label for="field_address2" class="form-label"
-                                >Address 2</label
-                            >
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="address2"
-                                id="field_address2"
-                                data-cy="address2"
-                                formControlName="address2"
-                            />
-                        </div>
-                        <div class="col-12 col-lg-6 mt-2">
-                            <label for="field_city" class="form-label"
-                                >City</label
-                            >
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="city"
-                                id="field_city"
-                                data-cy="city"
-                                formControlName="city"
-                            />
-                            <div
-                                *ngIf="
-                                    editForm.get('city')!.invalid &&
-                                    (editForm.get('city')!.dirty ||
-                                        editForm.get('city')!.touched)
-                                "
-                            >
-                                <small
-                                    class="form-text text-danger"
-                                    *ngIf="
-                                        editForm.get('city')?.errors?.required
-                                    "
-                                >
-                                    This field is required.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-4 mt-2">
-                            <label for="field_state" class="form-label"
-                                >State</label
-                            >
-                            <select
-                                name="state"
-                                formControlName="state"
-                                id="field_state"
-                                data-cy="state"
-                                class="form-select"
-                            >
-                                <option [ngValue]="null"></option>
-                                <option
-                                    *ngFor="let stateKey of statesKeys"
-                                    [value]="stateKey"
-                                >
-                                    {{ getStateValue(stateKey) }}
-                                </option>
-                            </select>
-                            <div
-                                *ngIf="
-                                    editForm.get('state')!.invalid &&
-                                    (editForm.get('state')!.dirty ||
-                                        editForm.get('state')!.touched)
-                                "
-                            >
-                                <small
-                                    class="form-text text-danger"
-                                    *ngIf="
-                                        editForm.get('state')?.errors?.required
-                                    "
-                                >
-                                    This field is required.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-2 mt-2">
-                            <label for="field_zipCode" class="form-label"
-                                >Zip</label
-                            >
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="zipCode"
-                                id="field_zipCode"
-                                data-cy="zipCode"
-                                formControlName="zipCode"
-                            />
-                            <div
-                                *ngIf="
-                                    editForm.get('zipCode')!.invalid &&
-                                    (editForm.get('zipCode')!.dirty ||
-                                        editForm.get('zipCode')!.touched)
-                                "
-                            >
-                                <small
-                                    class="form-text text-danger"
-                                    *ngIf="
-                                        editForm.get('zipCode')?.errors
-                                            ?.required
-                                    "
-                                >
-                                    This field is required.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 mt-3">
-                            <label class="control-label">Categories</label>
-                            <p-multiSelect
-                                [options]="allCategories"
-                                [(ngModel)]="selectedCategories"
-                                optionLabel="name"
-                                optionValue="id"
-                                [ngModelOptions]="{ standalone: true }"
-                                [display]="
-                                    selectedCategories.length > 3
-                                        ? 'comma'
-                                        : 'chip'
-                                "
-                                placeholder="Select"
-                            ></p-multiSelect>
-                        </div>
-                        <div class="col-12 col-lg-6 mt-3">
-                            <label for="field_birthDate" class="control-label"
-                                >Birth Date</label
-                            >
-                            <input
-                                id="field_birthDate"
-                                data-cy="birthDate"
-                                type="date"
-                                class="form-control"
-                                name="birthDate"
-                                ngbDatepicker
-                                #birthDateDp="ngbDatepicker"
-                                formControlName="birthDate"
-                            />
-                        </div>
-                        <div class="col-12 d-flex justify-content-end mt-2">
-                            <button
-                                type="submit"
-                                class="btn btn-lg btn-primary rounded-pill"
-                            >
-                                Save
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-12 col-lg-6">
+              <label for="field_lastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" name="lastName" id="field_lastName" data-cy="lastName" formControlName="lastName" />
+              <div *ngIf="editForm.get('lastName')!.invalid && (editForm.get('lastName')!.dirty || editForm.get('lastName')!.touched)">
+                <small class="form-text text-danger" *ngIf="editForm.get('lastName')?.errors?.required"> This field is required. </small>
+              </div>
             </div>
-        </form>
-    </div>
+            <div class="col-12 col-lg-6 mt-2">
+              <label for="field_email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                name="email"
+                id="field_email"
+                data-cy="email"
+                formControlName="email"
+                (focus)="handleFocus('email')"
+                (blur)="handleBlur('email')"
+              />
+              <div *ngIf="editForm.get('email')!.invalid && (editForm.get('email')!.dirty || editForm.get('email')!.touched)">
+                <small class="form-text text-danger" *ngIf="editForm.get('email')?.errors?.required"> This field is required. </small>
+                <small
+                  class="form-text text-danger"
+                  *ngIf="!editForm.get('email')?.errors?.required && isBlurred('email') && editForm.get('email')?.invalid"
+                >
+                  Email is invalid.
+                </small>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 mt-2">
+              <label for="field_phoneNumber" class="form-label">Phone</label>
+              <input
+                type="text"
+                class="form-control"
+                name="phoneNumber"
+                id="field_phoneNumber"
+                data-cy="phoneNumber"
+                formControlName="phoneNumber"
+                (focus)="handleFocus('phoneNumber')"
+                (blur)="handleBlur('phoneNumber')"
+              />
+              <div
+                *ngIf="editForm.get('phoneNumber')!.invalid && (editForm.get('phoneNumber')!.dirty || editForm.get('phoneNumber')!.touched)"
+              >
+                <small class="form-text text-danger" *ngIf="editForm.get('phoneNumber')?.errors?.required"> This field is required. </small>
+                <small
+                  class="form-text text-danger"
+                  *ngIf="!editForm.get('phoneNumber')?.errors?.required && isBlurred('phoneNumber') && editForm.get('phoneNumber')?.invalid"
+                >
+                  Use XXX-XXX-XXXX format.
+                </small>
+              </div>
+            </div>
+            <div class="col-12 mt-2">
+              <label for="field_address1" class="form-label">Address</label>
+              <input type="text" class="form-control" name="address1" id="field_address1" data-cy="address1" formControlName="address1" />
+              <div *ngIf="editForm.get('address1')!.invalid && (editForm.get('address1')!.dirty || editForm.get('address1')!.touched)">
+                <small class="form-text text-danger" *ngIf="editForm.get('address1')?.errors?.required"> This field is required. </small>
+              </div>
+            </div>
+            <div class="col-12 mt-2">
+              <label for="field_address2" class="form-label">Address 2</label>
+              <input type="text" class="form-control" name="address2" id="field_address2" data-cy="address2" formControlName="address2" />
+            </div>
+            <div class="col-12 col-lg-6 mt-2">
+              <label for="field_city" class="form-label">City</label>
+              <input type="text" class="form-control" name="city" id="field_city" data-cy="city" formControlName="city" />
+              <div *ngIf="editForm.get('city')!.invalid && (editForm.get('city')!.dirty || editForm.get('city')!.touched)">
+                <small class="form-text text-danger" *ngIf="editForm.get('city')?.errors?.required"> This field is required. </small>
+              </div>
+            </div>
+            <div class="col-12 col-lg-4 mt-2">
+              <label for="field_state" class="form-label">State</label>
+              <select name="state" formControlName="state" id="field_state" data-cy="state" class="form-select">
+                <option [ngValue]="null"></option>
+                <option *ngFor="let stateKey of statesKeys" [value]="stateKey">
+                  {{ getStateValue(stateKey) }}
+                </option>
+              </select>
+              <div *ngIf="editForm.get('state')!.invalid && (editForm.get('state')!.dirty || editForm.get('state')!.touched)">
+                <small class="form-text text-danger" *ngIf="editForm.get('state')?.errors?.required"> This field is required. </small>
+              </div>
+            </div>
+            <div class="col-12 col-lg-2 mt-2">
+              <label for="field_zipCode" class="form-label">Zip</label>
+              <input type="text" class="form-control" name="zipCode" id="field_zipCode" data-cy="zipCode" formControlName="zipCode" />
+              <div *ngIf="editForm.get('zipCode')!.invalid && (editForm.get('zipCode')!.dirty || editForm.get('zipCode')!.touched)">
+                <small class="form-text text-danger" *ngIf="editForm.get('zipCode')?.errors?.required"> This field is required. </small>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 mt-3">
+              <label class="control-label">Categories</label>
+              <p-multiSelect
+                [options]="allCategories"
+                [(ngModel)]="selectedCategories"
+                optionLabel="name"
+                optionValue="id"
+                [ngModelOptions]="{ standalone: true }"
+                [display]="selectedCategories.length > 3 ? 'comma' : 'chip'"
+                placeholder="Select"
+              ></p-multiSelect>
+            </div>
+            <div class="col-12 col-lg-6 mt-3">
+              <label for="field_birthDate" class="control-label">Birth Date</label>
+              <input
+                id="field_birthDate"
+                data-cy="birthDate"
+                type="date"
+                class="form-control"
+                name="birthDate"
+                ngbDatepicker
+                #birthDateDp="ngbDatepicker"
+                formControlName="birthDate"
+              />
+            </div>
+            <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+              <button type="button" class="btn btn-lg btn-secondary rounded-pill px-4 py-2" [routerLink]="['/contact']">Cancel</button>
+              <button type="submit" class="btn btn-lg btn-primary rounded-pill px-4 py-2">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </section>
 
 <!-- <div class="d-flex justify-content-center">

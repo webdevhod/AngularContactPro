@@ -1,22 +1,29 @@
-import { Component, OnInit } from "@angular/core";
-import { HttpResponse } from "@angular/common/http";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { Component, OnInit } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { IContact } from "../contact.model";
-import { ContactService } from "../service/contact.service";
-import { ContactDeleteDialogComponent } from "../delete/contact-delete-dialog.component";
-import { DataUtils } from "app/core/util/data-util.service";
+import { IContact } from '../contact.model';
+import { ContactService } from '../service/contact.service';
+import { ContactDeleteDialogComponent } from '../delete/contact-delete-dialog.component';
+import { DataUtils } from 'app/core/util/data-util.service';
+import { CategoryService } from 'app/entities/category/service/category.service';
+import { ICategory } from 'app/entities/category/category.model';
 
 @Component({
-  selector: "jhi-contact",
-  templateUrl: "./contact.component.html",
+  selector: 'jhi-contact',
+  templateUrl: './contact.component.html',
+  styleUrls: ['./contact.component.scss'],
 })
 export class ContactComponent implements OnInit {
   contacts?: IContact[];
   isLoading = false;
 
+  allCategories: ICategory[] = [];
+  selectedCategory: ICategory | null = null;
+
   constructor(
     protected contactService: ContactService,
+    protected categoryService: CategoryService,
     protected dataUtils: DataUtils,
     protected modalService: NgbModal
   ) {}
@@ -31,6 +38,12 @@ export class ContactComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
+      },
+    });
+
+    this.categoryService.query().subscribe({
+      next: (res: HttpResponse<ICategory[]>) => {
+        this.allCategories = res.body?.map(category => this.categoryService.convertDateFromClient(category)) ?? [];
       },
     });
   }
@@ -53,15 +66,25 @@ export class ContactComponent implements OnInit {
 
   delete(contact: IContact): void {
     const modalRef = this.modalService.open(ContactDeleteDialogComponent, {
-      size: "lg",
-      backdrop: "static",
+      size: 'lg',
+      backdrop: 'static',
     });
     modalRef.componentInstance.contact = contact;
     // unsubscribe not needed because closed completes on modal close
-    modalRef.closed.subscribe((reason) => {
-      if (reason === "deleted") {
+    modalRef.closed.subscribe(reason => {
+      if (reason === 'deleted') {
         this.loadAll();
       }
     });
+  }
+
+  handleDropdownChange(): void {
+    if (this.selectedCategory?.id) {
+      this.categoryService.find(this.selectedCategory.id).subscribe((res: HttpResponse<ICategory>) => {
+        this.contacts = res.body?.contacts ?? [];
+      });
+    } else {
+      this.loadAll();
+    }
   }
 }

@@ -1,160 +1,145 @@
-import { Component, OnInit } from "@angular/core";
-import { HttpResponse } from "@angular/common/http";
-import { FormBuilder, Validators } from "@angular/forms";
-import { ActivatedRoute, UrlSegment } from "@angular/router";
-import { Observable } from "rxjs";
-import { finalize } from "rxjs/operators";
+import { Component, OnInit } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
-import { ICategory, Category } from "../category.model";
-import { CategoryService } from "../service/category.service";
-import { IContact } from "app/entities/contact/contact.model";
-import { ContactService } from "app/entities/contact/service/contact.service";
-import { IUser } from "app/entities/user/user.model";
-import { UserService } from "app/entities/user/user.service";
+import { ICategory, Category } from '../category.model';
+import { CategoryService } from '../service/category.service';
+import { IContact } from 'app/entities/contact/contact.model';
+import { ContactService } from 'app/entities/contact/service/contact.service';
+import { IUser } from 'app/entities/user/user.model';
+import { UserService } from 'app/entities/user/user.service';
 
 @Component({
-    selector: "jhi-category-update",
-    templateUrl: "./category-update.component.html",
-    styleUrls: ["./category-update.component.scss"],
+  selector: 'jhi-category-update',
+  templateUrl: './category-update.component.html',
+  styleUrls: ['./category-update.component.scss'],
 })
 export class CategoryUpdateComponent implements OnInit {
-    isSaving = false;
-    isNew = true;
+  isSaving = false;
+  isNew = true;
 
-    contactsSharedCollection: IContact[] = [];
-    allContacts: IContact[] = [];
-    selectedContacts: number[] = [];
-    usersSharedCollection: IUser[] = [];
+  contactsSharedCollection: IContact[] = [];
+  allContacts: IContact[] = [];
+  selectedContacts: number[] = [];
+  usersSharedCollection: IUser[] = [];
 
-    editForm = this.fb.group({
-        id: [],
-        name: [null, [Validators.required]],
-        created: [],
-        contacts: [],
-        user: [],
-        userId: [],
+  editForm = this.fb.group({
+    id: [],
+    name: [null, [Validators.required]],
+    created: [],
+    contacts: [],
+    user: [],
+    userId: [],
+  });
+
+  constructor(
+    protected categoryService: CategoryService,
+    protected contactService: ContactService,
+    protected userService: UserService,
+    protected activatedRoute: ActivatedRoute,
+    protected fb: FormBuilder
+  ) {}
+
+  ngOnInit(): void {
+    this.activatedRoute.data.subscribe(({ category }) => {
+      this.updateForm(category);
+
+      this.selectedContacts = category.contacts.map((contact: IContact) => contact.id);
     });
 
-    constructor(
-        protected categoryService: CategoryService,
-        protected contactService: ContactService,
-        protected userService: UserService,
-        protected activatedRoute: ActivatedRoute,
-        protected fb: FormBuilder
-    ) {}
+    this.activatedRoute.url.subscribe((param: UrlSegment[]) => {
+      this.isNew = param.some(p => p.path === 'new');
+    });
 
-    ngOnInit(): void {
-        this.activatedRoute.data.subscribe(({ category }) => {
-            this.updateForm(category);
+    this.contactService.query().subscribe({
+      next: (res: HttpResponse<IContact[]>) => {
+        this.allContacts = res.body ?? [];
+      },
+    });
+  }
 
-            this.selectedContacts = category.contacts.map(
-                (contact: IContact) => contact.id
-            );
-        });
+  previousState(): void {
+    window.history.back();
+  }
 
-        this.activatedRoute.url.subscribe((param: UrlSegment[]) => {
-            this.isNew = param.some((p) => p.path === "new");
-        });
-
-        this.contactService.query().subscribe({
-            next: (res: HttpResponse<IContact[]>) => {
-                this.allContacts = res.body ?? [];
-            },
-        });
+  save(): void {
+    this.isSaving = true;
+    const category = this.createFromForm();
+    if (category.id !== undefined) {
+      this.subscribeToSaveResponse(this.categoryService.update(category));
+    } else {
+      this.subscribeToSaveResponse(this.categoryService.create(category));
     }
+  }
 
-    previousState(): void {
-        window.history.back();
-    }
+  trackContactById(_index: number, item: IContact): number {
+    return item.id!;
+  }
 
-    save(): void {
-        this.isSaving = true;
-        const category = this.createFromForm();
-        if (category.id !== undefined) {
-            this.subscribeToSaveResponse(this.categoryService.update(category));
-        } else {
-            this.subscribeToSaveResponse(this.categoryService.create(category));
-        }
-    }
+  trackUserById(_index: number, item: IUser): string {
+    return item.id!;
+  }
 
-    trackContactById(_index: number, item: IContact): number {
-        return item.id!;
-    }
+  getSelectedContacts(): IContact[] {
+    const selectedContacts: Set<number | undefined> = new Set(this.selectedContacts);
+    return this.allContacts.filter(contact => selectedContacts.has(contact.id));
+  }
 
-    trackUserById(_index: number, item: IUser): string {
-        return item.id!;
-    }
+  getLabelFromContact(option: IContact | undefined): string {
+    return option ? `${option.firstName ?? ''} ${option.lastName ?? ''} <${option.email ?? ''}>` : '';
+  }
 
-    getSelectedContact(option: IContact, selectedVals?: IContact[]): IContact {
-        if (selectedVals) {
-            for (const selectedVal of selectedVals) {
-                if (option.id === selectedVal.id) {
-                    return selectedVal;
-                }
-            }
-        }
-        return option;
-    }
+  getSelectedContact(id: number): IContact | undefined {
+    return this.allContacts.find(contact => contact.id === id);
+  }
 
-    getSelectedContacts(): IContact[] {
-        const selectedContacts: Set<number | undefined> = new Set(
-            this.selectedContacts
-        );
-        const filteredContacts = this.allContacts.filter((contact) =>
-            selectedContacts.has(contact.id)
-        );
-        return this.allContacts.filter((contact) =>
-            selectedContacts.has(contact.id)
-        );
-    }
+  getLabelFromContactId(id: number): string {
+    const contact = this.getSelectedContact(id);
+    return this.getLabelFromContact(contact);
+  }
 
-    getOptionLabel(option: IContact): string {
-        return `${option.firstName ?? ""} ${option.lastName ?? ""} <${
-            option.email ?? ""
-        }>`;
-    }
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<ICategory>>): void {
+    result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
+      next: () => this.onSaveSuccess(),
+      error: () => this.onSaveError(),
+    });
+  }
 
-    protected subscribeToSaveResponse(
-        result: Observable<HttpResponse<ICategory>>
-    ): void {
-        result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
-            next: () => this.onSaveSuccess(),
-            error: () => this.onSaveError(),
-        });
-    }
+  protected onSaveSuccess(): void {
+    this.previousState();
+  }
 
-    protected onSaveSuccess(): void {
-        this.previousState();
-    }
+  protected onSaveError(): void {
+    // Api for inheritance.
+  }
 
-    protected onSaveError(): void {
-        // Api for inheritance.
-    }
+  protected onSaveFinalize(): void {
+    this.isSaving = false;
+  }
 
-    protected onSaveFinalize(): void {
-        this.isSaving = false;
-    }
+  protected updateForm(category: ICategory): void {
+    this.editForm.patchValue({
+      id: category.id,
+      name: category.name,
+      created: category.created,
+      contacts: this.getSelectedContacts(),
+      user: category.user,
+      userId: category.userId,
+    });
+  }
 
-    protected updateForm(category: ICategory): void {
-        this.editForm.patchValue({
-            id: category.id,
-            name: category.name,
-            created: category.created,
-            contacts: this.getSelectedContacts(),
-            user: category.user,
-            userId: category.userId,
-        });
-    }
-
-    protected createFromForm(): ICategory {
-        return {
-            ...new Category(),
-            id: this.editForm.get(["id"])!.value,
-            name: this.editForm.get(["name"])!.value,
-            created: this.editForm.get(["created"])!.value,
-            contacts: this.getSelectedContacts(),
-            user: this.editForm.get(["user"])!.value,
-            userId: this.editForm.get(["userId"])!.value,
-        };
-    }
+  protected createFromForm(): ICategory {
+    return {
+      ...new Category(),
+      id: this.editForm.get(['id'])!.value,
+      name: this.editForm.get(['name'])!.value,
+      created: this.editForm.get(['created'])!.value,
+      contacts: this.getSelectedContacts(),
+      user: this.editForm.get(['user'])!.value,
+      userId: this.editForm.get(['userId'])!.value,
+    };
+  }
 }

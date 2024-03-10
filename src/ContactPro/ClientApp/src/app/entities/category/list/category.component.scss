@@ -1,17 +1,21 @@
-.category-row {
-    td {
+:host {
+  ::ng-deep {
+    .category-row {
+      td {
         vertical-align: middle;
-    }
+      }
 
-    .btn-group {
+      .btn-group {
         button {
-            border-radius: 4px;
+          border-radius: 4px;
 
-            $margin: 6px;
-            &:not(:first-child):not(:last-child) {
-                margin-right: $margin;
-                margin-left: $margin;
-            }
+          $margin: 6px;
+          &:not(:first-child):not(:last-child) {
+            margin-right: $margin;
+            margin-left: $margin;
+          }
         }
+      }
     }
+  }
 }
