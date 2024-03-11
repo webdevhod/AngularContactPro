@@ -162,8 +162,19 @@
     <div class="col-12 col-md-4 px-3 sideNav">
       <form>
         <div class="input-group">
-          <input class="form-control" type="search" name="searchString" placeholder="Search Term" />
-          <input type="submit" class="btn btn-outline-primary" value="Search" />
+          <label class="form-label fw-bold">SEARCH NAMES</label>
+          <span class="p-input-icon-right">
+            <input
+              type="search"
+              pInputText
+              class="form-control w-100"
+              [(ngModel)]="searchTerm"
+              [ngModelOptions]="{ standalone: true }"
+              type="search"
+              placeholder="Search by Name"
+            />
+            <i class="pi pi-search" (click)="handleSearch()" (keydown.enter)="handleSearch()"></i>
+          </span>
         </div>
       </form>
       <form>

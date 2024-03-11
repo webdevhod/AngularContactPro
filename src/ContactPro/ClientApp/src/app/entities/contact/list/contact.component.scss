@@ -1,11 +1,39 @@
 :host {
   ::ng-deep {
+    .input-group {
+      width: 100%;
+
+      .p-input-icon-right > i:last-of-type {
+        right: 0.75rem;
+      }
+
+      .pi.pi-search {
+        cursor: pointer;
+      }
+
+      .p-inputtext {
+        font-size: 0.9rem;
+      }
+
+      span {
+        width: 100%;
+      }
+    }
+
     .contact-mt {
       margin-top: 1.5rem;
     }
 
     .p-dropdown {
       width: 100%;
+
+      .p-inputtext {
+        font-size: 0.9rem;
+      }
+
+      .p-dropdown-item {
+        font-size: 0.9rem;
+      }
     }
   }
 }

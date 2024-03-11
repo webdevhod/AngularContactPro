@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -21,12 +21,24 @@ export class ContactComponent implements OnInit {
   allCategories: ICategory[] = [];
   selectedCategory: ICategory | null = null;
 
+  searchTerm = '';
+
   constructor(
     protected contactService: ContactService,
     protected categoryService: CategoryService,
     protected dataUtils: DataUtils,
     protected modalService: NgbModal
   ) {}
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.code === 'Enter') {
+      this.handleSearch();
+    } else if (event.code === 'Escape') {
+      this.searchTerm = '';
+      this.handleSearch();
+    }
+  }
 
   loadAll(): void {
     this.isLoading = true;
@@ -83,6 +95,26 @@ export class ContactComponent implements OnInit {
       this.categoryService.find(this.selectedCategory.id).subscribe((res: HttpResponse<ICategory>) => {
         this.contacts = res.body?.contacts ?? [];
       });
+    } else {
+      this.loadAll();
+    }
+  }
+
+  handleSearch(): void {
+    if (this.searchTerm.length > 0) {
+      this.contactService
+        .query({
+          searchTerm: this.searchTerm,
+        })
+        .subscribe({
+          next: (res: HttpResponse<IContact[]>) => {
+            this.isLoading = false;
+            this.contacts = res.body ?? [];
+          },
+          error: () => {
+            this.isLoading = false;
+          },
+        });
     } else {
       this.loadAll();
     }
