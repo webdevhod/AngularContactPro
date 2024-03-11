@@ -15,6 +15,7 @@ import { UserService } from 'app/entities/user/user.service';
 import { States } from 'app/entities/enumerations/states.model';
 import { ICategory } from 'app/entities/category/category.model';
 import { CategoryService } from 'app/entities/category/service/category.service';
+import { IconDefinition, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 // import { ThemeService } from "app/theme.service";
 
 @Component({
@@ -27,6 +28,9 @@ export class ContactUpdateComponent implements OnInit {
   isSaving = false;
   statesKeys = Object.keys(States);
   blurredInputs: { [key: string]: boolean } = {};
+
+  faSave: IconDefinition = faSave;
+  faTimes: IconDefinition = faTimes;
 
   editForm = this.fb.group({
     id: [],

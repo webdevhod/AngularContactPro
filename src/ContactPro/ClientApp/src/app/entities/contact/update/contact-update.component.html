@@ -8,7 +8,7 @@
       </div>
       <div class="row g-3 p-2">
         <div class="col-12 col-lg-4">
-          <div class="square-img-container">
+          <div class="square-img-container mb-1">
             <img
               [src]="'data:' + editForm.get('imageType')!.value + ';base64,' + editForm.get('imageData')!.value"
               style="max-height: 100px"
@@ -167,8 +167,18 @@
               />
             </div>
             <div class="col-12 d-flex justify-content-end gap-2 mt-3">
-              <button type="button" class="btn btn-lg btn-secondary rounded-pill px-4 py-2" [routerLink]="['/contact']">Cancel</button>
-              <button type="submit" class="btn btn-lg btn-primary rounded-pill px-4 py-2">Save</button>
+              <button
+                type="button"
+                class="btn btn-lg btn-secondary rounded-pill px-4 py-2 d-flex justify-content-center gap-3"
+                [routerLink]="['/contact']"
+              >
+                <fa-icon [icon]="faTimes"></fa-icon>
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-lg btn-primary rounded-pill px-4 py-2 d-flex justify-content-center gap-3">
+                <fa-icon [icon]="faSave"></fa-icon>
+                Save
+              </button>
             </div>
           </div>
         </div>
