@@ -25,19 +25,13 @@
             [options]="allContacts"
             [(ngModel)]="selectedContacts"
             optionValue="id"
-            optionLabel="email"
+            optionLabel="tag"
             [ngModelOptions]="{ standalone: true }"
             [display]="selectedContacts.length > 3 ? 'comma' : 'chip'"
             placeholder="Select Contact(s)"
           >
-            <!-- <ng-template let-selectedContacts pTemplate="selectedItems">
-              <span *ngFor="let contactId of selectedContacts" class="p-multiselect-token-label">{{
-                getLabelFromContactId(contactId)
-              }}</span>
-              <div *ngIf="!selectedContacts || selectedContacts.length === 0">Select Contact(s)</div>
-            </ng-template> -->
             <ng-template let-contact pTemplate="item">
-              <span>{{ getLabelFromContact(contact) }}</span>
+              <span>{{ contact.tag }}</span>
             </ng-template>
           </p-multiSelect>
         </div>

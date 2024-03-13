@@ -15,6 +15,7 @@ namespace ContactPro.Domain.Entities
         [Required]
         public string LastName { get; set; }
         public string FullName { get { return $"{FirstName} {LastName}"; } }
+        public string Tag { get { return $"{FullName} <{Email}>"; } }
         [Required]
         public string Address1 { get; set; }
         public string Address2 { get; set; }

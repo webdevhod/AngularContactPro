@@ -88,17 +88,8 @@ export class CategoryUpdateComponent implements OnInit {
     return this.allContacts.filter(contact => selectedContacts.has(contact.id));
   }
 
-  getLabelFromContact(option: IContact | undefined): string {
-    return option ? `${option.firstName ?? ''} ${option.lastName ?? ''} <${option.email ?? ''}>` : '';
-  }
-
   getSelectedContact(id: number): IContact | undefined {
     return this.allContacts.find(contact => contact.id === id);
-  }
-
-  getLabelFromContactId(id: number): string {
-    const contact = this.getSelectedContact(id);
-    return this.getLabelFromContact(contact);
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<ICategory>>): void {
