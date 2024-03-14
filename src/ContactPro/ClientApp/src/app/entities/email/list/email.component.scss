@@ -1,0 +1,22 @@
+:host {
+  ::ng-deep {
+    .email-group {
+      display: flex;
+      flex-direction: column;
+
+      #contacts {
+        width: 100%;
+
+        .p-multiselect {
+          padding: 2px;
+          width: 100%;
+        }
+      }
+
+      #subject,
+      #message {
+        padding: 8px;
+      }
+    }
+  }
+}

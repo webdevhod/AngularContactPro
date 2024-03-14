@@ -1,83 +1,54 @@
 <section class="container mt-5">
   <h1>Email {{ categoryName }}</h1>
-  <div className="p-2">
-    <form method="post">
-      <p-multiSelect
-        [ngModelOptions]="{ standalone: true }"
-        [display]="selectedContacts.length > 3 ? 'comma' : 'chip'"
-        [(ngModel)]="selectedContacts"
-        [options]="allContacts"
-        optionValue="id"
-        optionLabel="tag"
-        placeholder="Select Contact(s)"
-      >
-        <ng-template let-value pTemplate="item">
-          <div class="flex align-items-center">{{ value?.tag }}</div>
-        </ng-template>
-      </p-multiSelect>
-      <div className="row row-cols-1 row-cols-md-2 g-3 mb-3">
-        <div className="col col-md-12">
-          <label className="form-label" htmlFor="contacts"> To: </label>
-          <!-- (onChange)="handleContactChange($event)" -->
-          <!-- <Select
-              className="col mb-3"
-              id="category-contact"
-              data-cy="contact"
-              name="contacts"
-              isMulti={true}
-              isSearchable={true}
-              getOptionValue={option => option.id}
-              getOptionLabel={option => `${option.firstName} ${option.lastName} <${option.email}>`}
-              options={contactList}
-              isClearable={true}
-              closeMenuOnSelect={false}
-              openMenuOnFocus={true}
-              value={contactsSelected}
-              backspaceRemovesValue={true}
-              onChange={e => {
-                setContactsSelected([...e]);
-              }}
-            /> -->
+  <div class="p-2">
+    <form method="post" role="form" (ngSubmit)="send()">
+      <div class="row row-cols-1 g-3">
+        <div class="col email-group">
+          <label class="form-label" for="contacts">To</label>
+          <p-multiSelect
+            class="col"
+            [display]="selectedContacts.length > 3 ? 'comma' : 'chip'"
+            [(ngModel)]="selectedContacts"
+            [ngModelOptions]="{ standalone: true }"
+            [options]="allContacts"
+            optionValue="id"
+            optionLabel="tag"
+            placeholder="Select Contact(s)"
+            id="contacts"
+            name="contacts"
+          >
+            <ng-template let-value pTemplate="item">
+              <div class="flex align-items-center">{{ value?.tag }}</div>
+            </ng-template>
+          </p-multiSelect>
         </div>
-      </div>
-      <div className="row row-cols-1 g-3">
-        <div className="col">
-          <label className="form-label">Subject:</label>
-          <!-- <input
-              type="text"
-              className="form-control"
-              value={subject}
-              onChange={e => {
-                setSubject(e.target.value);
-              }}
-            /> -->
+        <div class="col email-group">
+          <label class="form-label" for="subject">Subject</label>
+          <input
+            type="text"
+            pInputText
+            class="form-control"
+            id="subject"
+            name="subject"
+            [(ngModel)]="subject"
+            [ngModelOptions]="{ standalone: true }"
+          />
         </div>
-        <div className="col">
-          <label className="form-label">Message:</label>
-          <!-- <textarea
-              className="form-control"
-              rows={10}
-              required
-              value={body}
-              onChange={e => {
-                setBody(e.target.value);
-              }}
-            ></textarea> -->
+        <div class="col email-group">
+          <label class="form-label" for="message">Message</label>
+          <textarea
+            rows="12"
+            cols="80"
+            pInputTextarea
+            id="message"
+            name="message"
+            [(ngModel)]="message"
+            [ngModelOptions]="{ standalone: true }"
+          ></textarea>
         </div>
-        <div className="col text-end">
-          <!-- <button
-              className="btn btn-light rounded-pill btnlinks me-2"
-              type="submit"
-              onClick={e => {
-                e.preventDefault();
-                handleClose();
-              }}
-            >
-              Cancel
-            </button>
-            <button className="btn btn-primary rounded-pill btnlinks" type="submit" onClick={handleSubmit}>
-              Send
-            </button> -->
+        <div class="col text-end">
+          <button class="btn btn-light rounded-pill btnlinks me-2" type="button" (click)="handleCancel()">Cancel</button>
+          <button class="btn btn-primary rounded-pill btnlinks" type="submit" [disabled]="!isValidEmail()">Send</button>
         </div>
       </div>
     </form>

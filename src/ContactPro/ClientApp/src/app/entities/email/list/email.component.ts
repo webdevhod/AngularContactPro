@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IContact } from '../../contact/contact.model';
 import { HttpResponse } from '@angular/common/http';
 import { ICategory } from '../../category/category.model';
+import { IEmail } from '../email.model';
 
 @Component({
   selector: 'jhi-email',
@@ -14,8 +15,11 @@ import { ICategory } from '../../category/category.model';
 export class EmailComponent implements OnInit {
   allContacts: IContact[] = [];
   selectedContacts: number[] = [];
-  isContact = false;
+  isCategory = false;
   categoryName = '';
+
+  subject = '';
+  message = '';
 
   constructor(
     protected activatedRoute: ActivatedRoute,
@@ -32,25 +36,25 @@ export class EmailComponent implements OnInit {
     });
 
     this.activatedRoute.data.subscribe(({ contactOrCategory }) => {
-      if (this.isObjectContact(contactOrCategory)) {
-        this.isContact = true;
-        this.categoryName = 'Contact';
-        this.selectedContacts.push(contactOrCategory.id);
-      } else if (this.isObjectCategory(contactOrCategory)) {
-        this.isContact = false;
+      if (this.isObjectCategory(contactOrCategory)) {
+        this.isCategory = true;
         this.categoryName = contactOrCategory.name;
         contactOrCategory.contacts?.forEach((contact: IContact) => {
           contact.id !== undefined && this.selectedContacts.push(contact.id);
         });
+      } else if (this.isObjectContact(contactOrCategory)) {
+        this.isCategory = false;
+        this.categoryName = 'Contact';
+        this.selectedContacts.push(contactOrCategory.id);
       }
     });
   }
 
   isObjectContact(contactOrCategory: IContact | ICategory): boolean {
     return (
+      'email' in contactOrCategory ||
       'firstName' in contactOrCategory ||
       'lastName' in contactOrCategory ||
-      'email' in contactOrCategory ||
       'phoneNumber' in contactOrCategory ||
       'birthDate' in contactOrCategory ||
       'categories' in contactOrCategory ||
@@ -62,5 +66,30 @@ export class EmailComponent implements OnInit {
 
   isObjectCategory(contactOrCategory: IContact | ICategory): boolean {
     return 'contacts' in contactOrCategory || 'name' in contactOrCategory;
+  }
+
+  isValidEmail(): boolean {
+    return this.selectedContacts.length > 0 && this.subject.length > 0 && this.message.length > 0;
+  }
+
+  handleCancel(): void {
+    const path: string = this.router.url.split('/')[1];
+    this.router.navigate([`/${path}`]);
+  }
+
+  send(): void {
+    const email = this.createFromForm();
+    // eslint-disable-next-line no-console
+    console.log('send', email);
+  }
+
+  protected createFromForm(): IEmail {
+    const selectedContacts: Set<number> = new Set<number>(this.selectedContacts);
+    return {
+      contacts: this.allContacts.filter(contact => selectedContacts.has(contact.id!)),
+      subject: this.subject,
+      message: this.message,
+      isCategory: this.isCategory,
+    };
   }
 }
