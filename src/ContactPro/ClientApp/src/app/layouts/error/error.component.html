@@ -1,6 +1,13 @@
 <div class="container">
-    <h1>Error Page!</h1>
-    <div *ngIf="errorMessage">
-        <div class="alert alert-danger">{{ errorMessage }}</div>
+  <div class="mainbox">
+    <div class="error-code">
+      <div class="err">4</div>
+      <fa-icon class="far" icon="question-circle" [spin]="true"></fa-icon>
+      <div class="err">4</div>
     </div>
+    <div class="msg">
+      Maybe this page moved? Got deleted? Is hiding out in quarantine? Never existed in the first place?
+      <p>Let&apos;s go <a routerLink="/">home</a> and try from there.</p>
+    </div>
+  </div>
 </div>

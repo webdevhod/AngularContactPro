@@ -1,0 +1,45 @@
+:host {
+  ::ng-deep {
+    .mainbox {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      margin: 100px auto;
+      width: 600px;
+
+      a {
+        color: #0069bc;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .error-code {
+        align-items: center;
+        color: #0069bc;
+        display: flex;
+        gap: 12px;
+        height: 250px;
+        justify-content: center;
+
+        .err {
+          font-family: 'Nunito Sans', sans-serif;
+          font-size: 12rem;
+        }
+
+        .far {
+          font-size: 8.5rem;
+        }
+      }
+
+      .msg {
+        font-family: 'Nunito Sans', sans-serif;
+        font-size: 1.6rem;
+        text-align: center;
+        width: 75%;
+      }
+    }
+  }
+}
