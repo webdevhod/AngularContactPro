@@ -6,6 +6,7 @@ import { IContact } from '../../contact/contact.model';
 import { HttpResponse } from '@angular/common/http';
 import { ICategory } from '../../category/category.model';
 import { IEmail } from '../email.model';
+import { EmailService } from '../service/email.service';
 
 @Component({
   selector: 'jhi-email',
@@ -25,7 +26,8 @@ export class EmailComponent implements OnInit {
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
     protected contactService: ContactService,
-    protected categoryService: CategoryService
+    protected categoryService: CategoryService,
+    protected emailService: EmailService
   ) {}
 
   ngOnInit(): void {
@@ -81,6 +83,10 @@ export class EmailComponent implements OnInit {
     const email = this.createFromForm();
     // eslint-disable-next-line no-console
     console.log('send', email);
+    this.emailService.create(email).subscribe(res => {
+      // eslint-disable-next-line no-console
+      console.log(res);
+    })
   }
 
   protected createFromForm(): IEmail {
