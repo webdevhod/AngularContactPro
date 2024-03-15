@@ -27,7 +27,7 @@ public static class HeaderUtil
     public static IHeaderDictionary CreateEntityEmailAlert(string name, string entityName, string param)
     {
         // loop through contact list
-        return CreateAlert($"{name} {entityName} emailed!", param);
+        return CreateAlert($"{name} emailed!", param);
     }
 
     public static IHeaderDictionary CreateEntityDeletionAlert(string name, string entityName, string param)

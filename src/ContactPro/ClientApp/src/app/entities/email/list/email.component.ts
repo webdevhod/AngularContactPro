@@ -81,12 +81,11 @@ export class EmailComponent implements OnInit {
 
   send(): void {
     const email = this.createFromForm();
-    // eslint-disable-next-line no-console
-    console.log('send', email);
     this.emailService.create(email).subscribe(res => {
       // eslint-disable-next-line no-console
-      console.log(res);
-    })
+      console.log('subscribe', res);
+      this.handleCancel();
+    });
   }
 
   protected createFromForm(): IEmail {
@@ -95,7 +94,6 @@ export class EmailComponent implements OnInit {
       contacts: this.allContacts.filter(contact => selectedContacts.has(contact.id!)),
       subject: this.subject,
       message: this.message,
-      isCategory: this.isCategory,
     };
   }
 }

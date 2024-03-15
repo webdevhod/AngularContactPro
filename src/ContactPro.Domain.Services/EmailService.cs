@@ -1,8 +1,6 @@
 ﻿using ContactPro.Domain.Entities;
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
@@ -42,7 +40,8 @@ public class EmailService
 
         mimeMessage.Sender = MailboxAddress.Parse(_utilityService.GetCurrentUserEmail());
 
-        foreach(Contact contact in contacts) {
+        foreach (Contact contact in contacts)
+        {
             mimeMessage.To.Add(MailboxAddress.Parse(contact.Email));
         }
 
@@ -59,12 +58,12 @@ public class EmailService
     {
         using var smtp = new SmtpClient();
 
-        try 
+        try
         {
-            string email = _mailSettings.Email ?? Environment.GetEnvironmentVariable("Email"); 
+            string email = _mailSettings.Email ?? Environment.GetEnvironmentVariable("Email");
             string host = _mailSettings.EmailHost ?? Environment.GetEnvironmentVariable("EmailHost");
             string password = _mailSettings.EmailPassword ?? Environment.GetEnvironmentVariable("EmailPassword");
-            int port = _mailSettings.EmailPort != 0 ? _mailSettings.EmailPort : Int32.Parse(Environment.GetEnvironmentVariable("EmailPort"));
+            int port = _mailSettings.EmailPort != 0 ? _mailSettings.EmailPort : Int32.Parse(Environment.GetEnvironmentVariable("EmailPort") ?? "465");
 
             smtp.Connect(host, port, SecureSocketOptions.StartTls);
             smtp.Authenticate(email, password);

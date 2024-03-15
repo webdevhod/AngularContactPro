@@ -10,13 +10,10 @@ using ContactPro.Web.Filters;
 using ContactPro.Web.Rest.Utilities;
 using JHipsterNet.Core.Pagination;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ContactPro.Controllers
@@ -124,43 +121,6 @@ namespace ContactPro.Controllers
                 .Include(category => category.Contacts)
                 .GetOneAsync(category => category.Id == id && _utilityService.GetCurrentUserId().Equals(category.UserId));
             return ActionResultUtil.WrapOrNotFound(result);
-        }
-
-        [HttpGet("{id}/email")]
-        public async Task<IActionResult> GetEmailCategory([FromRoute] long id)
-        {
-            _log.LogDebug($"REST request to get Email Category : {id}");
-            var result = await _categoryRepository.QueryHelper()
-                .Include(category => category.Contacts)
-                .GetOneAsync(category => category.Id == id && _utilityService.GetCurrentUserId().Equals(category.UserId));
-            if (result == null) throw new BadRequestAlertException("Invalid Id", EntityName, "idnull");
-            EmailData emailData = new EmailData();
-            emailData.Id = id;
-            emailData.IsCategory = true;
-            foreach (Contact contact in result.Contacts)
-            {
-                emailData.Contacts.Add(contact);
-            }
-            return ActionResultUtil.WrapOrNotFound(emailData);
-        }
-
-        [HttpPut("{id}/email")]
-        [Authorize(Roles = RolesConstants.ADMIN + "," + RolesConstants.USER)]
-        public async Task<IActionResult> SendEmailContact([FromBody] EmailData emailData)
-        {
-            _log.LogDebug($"REST request to post Email Category : {emailData.Id}");
-            ICollection<Contact> contacts = new HashSet<Contact>();
-            foreach (Contact contact in emailData.Contacts)
-            {
-                var result = await _contactRepository.QueryHelper()
-                    .GetOneAsync(c => c.Id == contact.Id && _utilityService.GetCurrentUserId().Equals(c.UserId));
-                if (result == null) throw new BadRequestAlertException("Invalid Id", EntityName, "idnull");
-                contacts.Add(result);
-            }
-
-            await _emailService.SendEmailAsync(contacts, emailData.Subject, emailData.Body);
-
-            return NoContent().WithHeaders(HeaderUtil.CreateEntityEmailAlert(string.Join(", ", emailData.Contacts.Select(c => c.Email).ToList()), EntityName, emailData.Id.ToString()));
         }
 
         [HttpDelete("{id}")]
