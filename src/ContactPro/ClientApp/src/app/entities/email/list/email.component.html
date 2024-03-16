@@ -49,7 +49,7 @@
         </div>
         <div class="col text-end">
           <button class="btn btn-light rounded-pill btnlinks me-2" type="button" (click)="handleCancel()">Cancel</button>
-          <button class="btn btn-primary rounded-pill btnlinks" type="submit" [disabled]="!isValidEmail()">Send</button>
+          <button class="btn btn-primary rounded-pill btnlinks" type="submit" [disabled]="isEmailDisabled || !isValidEmail()">Send</button>
         </div>
       </div>
     </form>

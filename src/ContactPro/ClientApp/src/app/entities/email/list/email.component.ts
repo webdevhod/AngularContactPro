@@ -6,7 +6,7 @@ import { IContact } from '../../contact/contact.model';
 import { HttpResponse } from '@angular/common/http';
 import { ICategory } from '../../category/category.model';
 import { IEmail } from '../email.model';
-import { EmailService, EntityResponseType } from '../service/email.service';
+import { EmailService } from '../service/email.service';
 import { AlertService } from 'app/core/util/alert.service';
 
 @Component({
@@ -22,6 +22,8 @@ export class EmailComponent implements OnInit {
 
   subject = '';
   message = '';
+
+  isEmailDisabled = false;
 
   constructor(
     protected activatedRoute: ActivatedRoute,
@@ -82,16 +84,20 @@ export class EmailComponent implements OnInit {
   }
 
   send(): void {
+    this.isEmailDisabled = true;
     const email = this.createFromForm();
     this.emailService.create(email).subscribe({
-      next: (res: EntityResponseType) => {
-        this.handleCancel();
+      next: () => {
+        setTimeout(() => {
+          this.handleCancel();
+        }, 3000);
       },
-      error: (res: EntityResponseType) => {
+      error: () => {
         this.alertService.addAlert({
           type: 'danger',
-          message: 'Demo accounts are blocked from sending emails. Please sign up for user account.',
+          message: 'Please sign up for user account.',
         });
+        this.isEmailDisabled = false;
       },
     });
   }
