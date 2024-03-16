@@ -6,7 +6,8 @@ import { IContact } from '../../contact/contact.model';
 import { HttpResponse } from '@angular/common/http';
 import { ICategory } from '../../category/category.model';
 import { IEmail } from '../email.model';
-import { EmailService } from '../service/email.service';
+import { EmailService, EntityResponseType } from '../service/email.service';
+import { AlertService } from 'app/core/util/alert.service';
 
 @Component({
   selector: 'jhi-email',
@@ -24,6 +25,7 @@ export class EmailComponent implements OnInit {
 
   constructor(
     protected activatedRoute: ActivatedRoute,
+    protected alertService: AlertService,
     protected router: Router,
     protected contactService: ContactService,
     protected categoryService: CategoryService,
@@ -81,10 +83,16 @@ export class EmailComponent implements OnInit {
 
   send(): void {
     const email = this.createFromForm();
-    this.emailService.create(email).subscribe(res => {
-      // eslint-disable-next-line no-console
-      console.log('subscribe', res);
-      this.handleCancel();
+    this.emailService.create(email).subscribe({
+      next: (res: EntityResponseType) => {
+        this.handleCancel();
+      },
+      error: (res: EntityResponseType) => {
+        this.alertService.addAlert({
+          type: 'danger',
+          message: 'Demo accounts are blocked from sending emails. Please sign up for user account.',
+        });
+      },
     });
   }
 

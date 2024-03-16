@@ -5,7 +5,7 @@ import { IEmail } from '../email.model';
 import { Observable, map } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmailService {
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/emails');
@@ -13,17 +13,7 @@ export class EmailService {
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(email: IEmail): Observable<EntityResponseType> {
-    // eslint-disable-next-line no-console
-    console.log('creating email from service', email);
-
-    return this.http
-      .post<IEmail>(this.resourceUrl, email, { observe: 'response' })
-      .pipe(map((data: EntityResponseType) => {
-        // eslint-disable-next-line no-console
-          console.log(data);
-
-        return data;
-      }));
+    return this.http.post<IEmail>(this.resourceUrl, email, { observe: 'response' }).pipe(map((data: EntityResponseType) => data));
   }
 }
 

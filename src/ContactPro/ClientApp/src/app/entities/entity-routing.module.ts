@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
     RouterModule.forChild([
       {
         path: ':path/:id/email',
+        data: { pageTitle: 'Emails' },
         loadChildren: () => import('./email/email.module').then(m => m.EmailModule),
       },
       {
