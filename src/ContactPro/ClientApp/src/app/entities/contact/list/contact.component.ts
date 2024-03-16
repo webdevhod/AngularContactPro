@@ -119,4 +119,8 @@ export class ContactComponent implements OnInit {
       this.loadAll();
     }
   }
+
+  getImageSrc(contact: IContact): string {
+    return this.contactService.getImageSrc(contact);
+  }
 }

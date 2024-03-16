@@ -79,6 +79,15 @@ export class ContactService {
     return contactCollection;
   }
 
+  getImageSrc(contact: IContact): string {
+    if (contact.imageData && contact.imageType) {
+      const imageType = contact.imageType.replace('.', '');
+      return `data:image/${imageType};base64,${contact.imageData}`;
+    } else {
+      return '';
+    }
+  }
+
   protected convertDateFromClient(contact: IContact): IContact {
     return Object.assign({}, contact, {
       birthDate: contact.birthDate?.isValid() ? contact.birthDate.format(DATE_FORMAT) : undefined,

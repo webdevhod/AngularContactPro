@@ -32,6 +32,8 @@ export class ContactUpdateComponent implements OnInit {
   faSave: IconDefinition = faSave;
   faTimes: IconDefinition = faTimes;
 
+  contact: IContact = new Contact();
+
   editForm = this.fb.group({
     id: [],
     firstName: [null, [Validators.required]],
@@ -80,6 +82,7 @@ export class ContactUpdateComponent implements OnInit {
 
     this.activatedRoute.data.subscribe(({ contact }) => {
       this.selectedCategories = contact.categories?.map((category: ICategory) => category.id) ?? [];
+      this.contact = contact;
       this.updateForm(contact);
     });
 
@@ -173,6 +176,10 @@ export class ContactUpdateComponent implements OnInit {
     const selectedCategories: Set<number | undefined> = new Set(this.selectedCategories);
     selectedCategories.delete(undefined);
     return this.allCategories.filter(category => category.id && selectedCategories.has(category.id));
+  }
+
+  getImageSrc(contact: IContact): string {
+    return this.contactService.getImageSrc(contact);
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IContact>>): void {

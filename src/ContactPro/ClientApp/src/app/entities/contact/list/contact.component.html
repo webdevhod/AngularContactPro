@@ -200,15 +200,7 @@
           <div class="card mb-3">
             <div class="row g-0">
               <div class="col-md-4 square-img-container">
-                <img
-                  [src]="
-                    contact.imageData
-                      ? 'data:' + contact.imageDataContentType + ';base64,' + contact.imageData
-                      : 'content/img/DefaultContactImage.png'
-                  "
-                  class="square-img rounded-start"
-                  [alt]="contact.firstName + ' ' + contact.lastName"
-                />
+                <img [src]="getImageSrc(contact)" class="square-img rounded-start" [alt]="contact.fullName" />
               </div>
               <div class="col-md-8">
                 <div class="card-body">
