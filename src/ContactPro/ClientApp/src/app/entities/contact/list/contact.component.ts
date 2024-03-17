@@ -42,6 +42,7 @@ export class ContactComponent implements OnInit {
 
   loadAll(): void {
     this.isLoading = true;
+    this.selectedCategory = null;
 
     this.contactService.query().subscribe({
       next: (res: HttpResponse<IContact[]>) => {
