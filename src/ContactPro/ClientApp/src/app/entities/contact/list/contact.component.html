@@ -196,7 +196,7 @@
     </div>
     <div class="col-12 col-md-8">
       <div class="row row-cols-1 g-3">
-        <div class="col" *ngFor="let contact of contacts">
+        <div class="col contact-{{ i }}" *ngFor="let contact of contacts; let i = index">
           <div class="card mb-3">
             <div class="row g-0">
               <div class="col-md-4 square-img-container">

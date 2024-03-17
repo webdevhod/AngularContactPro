@@ -1,12 +1,19 @@
-.content {
-    flex: 1 0 auto;
-    height: 100%;
-    padding-top: 5.5rem;
-    padding-bottom: 2.5rem;
-}
+:host {
+  ::ng-deep {
+    .content {
+      padding-top: 4.5rem;
+      padding-bottom: 9.5rem;
+      position: relative;
 
-jhi-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+      &:not(:has(> * .contact-3)) {
+        height: 100%;
+      }
+
+      jhi-footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
+    }
+  }
 }
