@@ -1,0 +1,11 @@
+:host {
+  ::ng-deep {
+    .btn-group {
+      & > .btn,
+      & > .btn:not(:last-child):not(.dropdown-toggle) {
+        $border-radius: 4px;
+        border-radius: $border-radius;
+      }
+    }
+  }
+}
