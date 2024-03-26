@@ -95,6 +95,7 @@ export class ContactComponent implements OnInit {
     if (this.selectedCategory?.id) {
       this.categoryService.find(this.selectedCategory.id).subscribe((res: HttpResponse<ICategory>) => {
         this.contacts = res.body?.contacts ?? [];
+        this.searchTerm = '';
       });
     } else {
       this.loadAll();
@@ -110,6 +111,7 @@ export class ContactComponent implements OnInit {
         .subscribe({
           next: (res: HttpResponse<IContact[]>) => {
             this.isLoading = false;
+            this.selectedCategory = null;
             this.contacts = res.body ?? [];
           },
           error: () => {
